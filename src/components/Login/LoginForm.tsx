@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface LoginFormProps {
-    onToggle: () => void;
-    onShowRecovery: () => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = ({ onToggle, onShowRecovery }) => {
+const LoginForm: React.FC = () => {
     return (
         <div className="login-form">
             <form>
@@ -19,11 +14,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onToggle, onShowRecovery }) => {
                 </div>
                 <button type="submit" className="login-button">LOGIN</button>
             </form>
-            <div className="options">
-                <a href="#" onClick={onShowRecovery}>Забыли пароль?</a>
-            </div>
-            <hr className="divider" />
-            <p className="toggle-text" onClick={onToggle}>Зарегистрироваться</p>
         </div>
     );
 };

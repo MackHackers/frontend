@@ -3,7 +3,7 @@
   background:
           linear-gradient(rgba(44, 62, 80, 0.7), rgba(52, 73, 94, 0.7)),
           url("../../../img/bg.jpg") center/cover no-repeat;
-  padding: 15vh 10px;
+  padding: 25vh 10px;
   position: relative;
 
   &::before {
@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+    height: 40vh;
     background: linear-gradient(135deg,
             rgba(255, 255, 255, 0.1) 0%,
             rgba(255, 255, 255, 0.05) 100%);

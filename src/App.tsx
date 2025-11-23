@@ -10,8 +10,6 @@ const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
 const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
 
 function App() {
-  const [count, setCount] = useState(0)
-
     return (
         <Router>
             <div className="App">

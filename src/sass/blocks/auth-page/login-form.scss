@@ -1,4 +1,8 @@
 .login-form {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+
   .options {
     display: flex;
     justify-content: space-between;
@@ -10,5 +14,87 @@
       color: #fff;
       text-decoration: none;
     }
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 15px;
+
+    input {
+      width: 100%;
+      padding: 10px 10px 10px 40px;
+      border: none;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: transparent;
+    }
+
+    .user-icon-small {
+      &::before {
+        content: '👤';
+        font-size: 14px;
+        color: #666;
+      }
+    }
+    .lock-icon {
+      &::before {
+        content: '🔒';
+        font-size: 14px;
+        color: #666;
+      }
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+
+  .login-button:active {
+    transform: translateY(0);
+  }
+
+  .divider {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    margin: 20px 0;
+  }
+
+  .toggle-text {
+    font-size: 12px;
+    opacity: 0.7;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .footer {
+    font-size: 12px;
+    opacity: 0.7;
   }
 }
