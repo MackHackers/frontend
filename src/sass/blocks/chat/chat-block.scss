@@ -1,8 +1,6 @@
 .chat-widget {
   position: fixed;
   z-index: 1000;
-  bottom: 30px;
-  right: 30px;
 
   &.chat-dragging {
     cursor: grabbing !important;
@@ -15,9 +13,6 @@
 }
 
 .chat-toggle-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -51,9 +46,6 @@
   flex-direction: column;
   overflow: hidden;
   border: 1px solid #e5e7eb;
-  position: absolute;
-  bottom: 70px;
-  right: 0;
 }
 
 .chat-header {
@@ -217,16 +209,9 @@
 }
 
 @media (max-width: 480px) {
-  .chat-widget {
-    bottom: 20px;
-    right: 20px;
-  }
-
   .chat-window {
     width: 300px;
     height: 400px;
-    bottom: 60px;
-    right: 0;
   }
 
   .chat-toggle-btn {
