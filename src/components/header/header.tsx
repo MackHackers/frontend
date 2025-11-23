@@ -1,6 +1,13 @@
 import React from 'react';
+import {useNavigate} from "react-router-dom";
 
 const DocsHeader: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleDocsClick = () => {
+        navigate('/docs');
+    };
+
     return (
         <header className="header">
             <div className="header-container">
@@ -11,7 +18,10 @@ const DocsHeader: React.FC = () => {
                     </div>
                 </div>
                 <div className="header-right">
-                    <button className="docs-button">
+                    <button
+                        className="docs-button"
+                        onClick={handleDocsClick}
+                    >
                         Docs
                     </button>
                 </div>
