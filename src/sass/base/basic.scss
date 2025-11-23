@@ -1,0 +1,65 @@
+@use "variables.scss" as *;
+
+* {
+	box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+figure,
+p,
+ol,
+ul {
+	margin: 0;
+}
+
+ol[role="list"],
+ul[role="list"] {
+	list-style: none;
+	padding-inline: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+img {
+	display: block;
+	max-inline-size: 100%;
+}
+
+html {
+	font-family: $font-family;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	background-color: $background;
+	color: $main-color;
+	font-family: $font-family;
+	font-size: 16px;
+	line-height: 1.193;
+}
+
+#root {
+	min-height: 100vh;
+}
+
+.container {
+	width: 100%;
+	max-width: $mobile-width;
+	margin: 0 auto;
+	padding: 0 40px;
+	background-color: $white;
+	min-height: 100vh;
+}

@@ -1,0 +1,101 @@
+@use "sass:color";
+@use "variables.scss" as *;
+
+@mixin title {
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+@mixin button {
+	display: block;
+	background-color: transparent;
+	border-radius: 2px;
+	text-align: center;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	text-transform: uppercase;
+}
+
+@mixin input {
+	width: 100%;
+	padding: 11px 10px;
+	border: 1px solid $border-color;
+	border-radius: $border-radius-md;
+	font-family: $font-family;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.193;
+	color: $main-color;
+	background-color: $white;
+	
+	&::placeholder {
+		color: $placeholder-color;
+	}
+	
+	&:focus {
+		outline: none;
+		border-color: $main-color;
+	}
+	
+	&:disabled {
+		background-color: $secondary-button;
+		color: $second-color;
+	}
+}
+
+@mixin button-primary {
+	width: 100%;
+	padding: 13px;
+	border: none;
+	border-radius: $border-radius-md;
+	background-color: $primary-button;
+	color: $white;
+	font-family: $font-family;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.221;
+	text-align: center;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	
+	&:hover:not(:disabled) {
+		background-color: color.adjust($primary-button, $lightness: -5%);
+	}
+	
+	&:disabled {
+		background-color: $primary-button-disabled;
+		cursor: not-allowed;
+	}
+}
+
+@mixin button-secondary {
+	width: 100%;
+	padding: 13px;
+	border: none;
+	border-radius: $border-radius-md;
+	background-color: $secondary-button;
+	color: $main-color;
+	font-family: $font-family;
+	font-size: 18px;
+	font-weight: 500;
+	line-height: 1.221;
+	text-align: center;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	
+	&:hover:not(:disabled) {
+		background-color: color.adjust($secondary-button, $lightness: -5%);
+	}
+}
+
+@mixin container {
+	max-width: $mobile-width;
+	margin: 0 auto;
+	padding: 0 40px;
+	min-height: 100vh;
+	background-color: $white;
+}
