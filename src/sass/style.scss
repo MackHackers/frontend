@@ -5,6 +5,11 @@
 @use "blocks/not-found-page/not-found.scss";
 @use "blocks/auth-page/auth.scss";
 @use "blocks/auth-page/login-form.scss";
+@use "blocks/docs-page/content.scss";
+@use "blocks/docs-page/docs.scss";
+@use "blocks/docs-page/sidebar.scss";
+@use "blocks/chat/chat-block.scss";
+@use "blocks/header.scss";
 
 @use "ui/titles.scss";
 @use "ui/buttons.scss";

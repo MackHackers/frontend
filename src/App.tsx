@@ -1,9 +1,10 @@
-import {lazy, Suspense, useState} from 'react'
+import {lazy, Suspense} from 'react'
 import LoadingPage from "./components/loading/LoadingPage.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import RedirectHandler from "./components/RedirectHandler/RedirectHandler.tsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
+import DocsPage from "./pages/Docs/Docs.tsx";
 
 const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
 //const Home = lazy(() => import("./pages/Home.tsx"));
@@ -17,6 +18,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<RedirectHandler />} />
                         <Route path="/auth" element={<Auth />} />
+                        <Route path="/docs" element={<DocsPage />} />
 
                         <Route path="*" element={<NotFound />} />
                     </Routes>
