@@ -1,3 +1,4 @@
+// src/components/Docs/DocsContent.tsx
 import React from 'react';
 
 interface DocsContentProps {
@@ -6,9 +7,10 @@ interface DocsContentProps {
         description: string;
         content: string;
     };
+    loading?: boolean;
 }
 
-const DocsContent: React.FC<DocsContentProps> = ({ content }) => {
+const DocsContent: React.FC<DocsContentProps> = ({ content, loading = false }) => {
     // Заглушка если контент не передан
     const defaultContent = {
         title: "Добро пожаловать в документацию SetlBase",
@@ -24,6 +26,16 @@ const DocsContent: React.FC<DocsContentProps> = ({ content }) => {
     };
 
     const currentContent = content || defaultContent;
+
+    if (loading) {
+        return (
+            <main className="docs-content">
+                <div className="content-container">
+                    <div className="loading-docs">Загрузка документа...</div>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="docs-content">

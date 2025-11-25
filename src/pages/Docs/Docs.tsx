@@ -1,8 +1,10 @@
+// src/pages/Docs/Docs.tsx
 import React, { useState } from 'react';
 import DocsHeader from '../../components/header/header.tsx';
 import DocsSidebar from '../../components/Docs/DocsSidebar.tsx';
 import DocsContent from '../../components/Docs/DocsContent.tsx';
 import ChatWidget from '../../components/Chat/ChatWidget.tsx';
+import { documentService } from '../../api/documentService';
 
 interface DocContent {
     title: string;
@@ -12,14 +14,23 @@ interface DocContent {
 
 const DocsPage: React.FC = () => {
     const [currentDoc, setCurrentDoc] = useState<DocContent | undefined>(undefined);
+    const [loading, setLoading] = useState(false);
 
-    // Функция для загрузки документа (с заглушка)
-    const loadDocument = (docId: string) => {
-        // Здесь будет логика загрузки документа
-        const mockDoc: DocContent = {
-            title: `Документация: ${docId}`,
-            description: `Подробное описание функционала ${docId}`,
-            content: `
+    const loadDocument = async (docId: string) => {
+        setLoading(true);
+        try {
+            const document = await documentService.getDocument(docId);
+            setCurrentDoc({
+                title: document.title,
+                description: document.metadata?.description || 'Описание документа',
+                content: document.content
+            });
+        } catch (error) {
+            console.error('Error loading document:', error);
+            const mockDoc: DocContent = {
+                title: `Документация: ${docId}`,
+                description: `Подробное описание функционала ${docId}`,
+                content: `
 # ${docId}
 
 Это содержимое документации для раздела "${docId}".
@@ -30,30 +41,18 @@ const DocsPage: React.FC = () => {
 - Функция 2  
 - Функция 3
 
-## Пример использования
-
-\`\`\`javascript
-import { ${docId} } from 'setlbase';
-
-const result = ${docId}.method();
-\`\`\`
-
-## Параметры
-
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| param1   | string | Описание параметра |
-| param2   | number | Описание параметра |
-
 <div class="warning-box">
   <div class="warning-icon">⚠️</div>
   <div class="warning-content">
-    <strong>Внимание:</strong> Этот функционал находится в стадии разработки.
+    <strong>Внимание:</strong> Документ временно недоступен.
   </div>
 </div>
-            `
-        };
-        setCurrentDoc(mockDoc);
+                `
+            };
+            setCurrentDoc(mockDoc);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -61,7 +60,7 @@ const result = ${docId}.method();
             <DocsHeader />
             <div className="docs-container">
                 <DocsSidebar onDocSelect={loadDocument} />
-                <DocsContent content={currentDoc} />
+                <DocsContent content={currentDoc} loading={loading} />
             </div>
             <ChatWidget />
         </div>
