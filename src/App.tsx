@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
 import DocsPage from "./pages/Docs/Docs.tsx";
 import { userService } from './api/userService';
 import DocsManagement from "./pages/DocsManagement/DocsManagment.tsx";
+import UserManagement from "./pages/UserManagment/UserManagment.tsx";
 
 const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
 const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
@@ -51,6 +52,15 @@ function App() {
                                 <DocsManagement />
                                 // <AdminProtectedRoute userRole={userRole}>
                                 //     <DocsManagement />
+                                // </AdminProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/user-management"
+                            element={
+                                <UserManagement />
+                                // <AdminProtectedRoute userRole={userRole}>
+                                //     <UserManagement />
                                 // </AdminProtectedRoute>
                             }
                         />
