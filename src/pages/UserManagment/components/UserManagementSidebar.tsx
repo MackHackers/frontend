@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { User } from '../../api/userManagementService';
+import type { User } from '../../../api/userManagementService';
 
 interface UserManagementSidebarProps {
     users: User[];

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DocsHeader from '../../components/header/header.tsx';
-import UserManagementSidebar from '../../components/UserManagement/UserManagementSidebar.tsx';
-import UserEditor from '../../components/UserManagement/UserEditor.tsx';
+import UserManagementSidebar from './components/UserManagementSidebar.tsx';
+import UserEditor from './components/UserEditor.tsx';
 import { userManagementService, type User, type CreateUserData, type UpdateUserData } from '../../api/userManagementService.ts';
 import { userService } from '../../api/userService';
 import { useNavigate } from 'react-router-dom';

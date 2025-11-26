@@ -1,8 +1,7 @@
-// src/pages/Docs/Docs.tsx
 import React, { useState } from 'react';
 import DocsHeader from '../../components/header/header.tsx';
-import DocsSidebar from '../../components/Docs/DocsSidebar.tsx';
-import DocsContent from '../../components/Docs/DocsContent.tsx';
+import DocsSidebar from './components/DocsSidebar.tsx';
+import DocsContent from './components/DocsContent.tsx';
 import ChatWidget from '../../components/Chat/ChatWidget.tsx';
 import { documentService } from '../../api/documentService';
 
@@ -20,6 +19,7 @@ const DocsPage: React.FC = () => {
         setLoading(true);
         try {
             const document = await documentService.getDocument(docId);
+            console.log(document)
             setCurrentDoc({
                 title: document.title,
                 description: document.metadata?.description || 'Описание документа',
@@ -27,29 +27,7 @@ const DocsPage: React.FC = () => {
             });
         } catch (error) {
             console.error('Error loading document:', error);
-            const mockDoc: DocContent = {
-                title: `Документация: ${docId}`,
-                description: `Подробное описание функционала ${docId}`,
-                content: `
-# ${docId}
-
-Это содержимое документации для раздела "${docId}".
-
-## Основные возможности
-
-- Функция 1
-- Функция 2  
-- Функция 3
-
-<div class="warning-box">
-  <div class="warning-icon">⚠️</div>
-  <div class="warning-content">
-    <strong>Внимание:</strong> Документ временно недоступен.
-  </div>
-</div>
-                `
-            };
-            setCurrentDoc(mockDoc);
+            
         } finally {
             setLoading(false);
         }

@@ -1,18 +1,7 @@
-// src/components/Docs/DocsSidebar.tsx
 import React, { useState, useEffect } from 'react';
-import { documentService } from '../../api/documentService';
-import type { SearchParams } from '../../api/documentService';
+import { documentService } from '../../../api/documentService';
+import type { DocumentOut, SearchParams } from '../../../api/documentService';
 
-interface MenuItem {
-    id: string;
-    title: string;
-    items?: SubMenuItem[];
-}
-
-interface SubMenuItem {
-    id: string;
-    title: string;
-}
 
 interface DocsSidebarProps {
     onDocSelect: (docId: string) => void;
@@ -25,49 +14,27 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [menuData, setMenuData] = useState<DocumentOut[]>([]);
 
-    const menuData: MenuItem[] = [
-        {
-            id: 'getting-started',
-            title: 'Начало работы',
-            items: [
-                { id: 'installation', title: 'Установка' },
-                { id: 'quick-start', title: 'Быстрый старт' },
-                { id: 'configuration', title: 'Конфигурация' }
-            ]
-        },
-        {
-            id: 'core-concepts',
-            title: 'Основные концепции',
-            items: [
-                { id: 'architecture', title: 'Архитектура' },
-                { id: 'components', title: 'Компоненты' },
-                { id: 'state-management', title: 'Управление состоянием' }
-            ]
-        },
-        {
-            id: 'api',
-            title: 'API Reference',
-            items: [
-                { id: 'core-api', title: 'Core API' },
-                { id: 'utils', title: 'Утилиты' },
-                { id: 'plugins', title: 'Плагины' }
-            ]
-        },
-        {
-            id: 'guides',
-            title: 'Руководства',
-            items: [
-                { id: 'authentication', title: 'Аутентификация' },
-                { id: 'database', title: 'Работа с базой данных' },
-                { id: 'deployment', title: 'Деплой' }
-            ]
+    const getAllDocs = async () =>  {
+        try {
+            const docs = await documentService.getAllDocuments();
+            setMenuData(docs);
         }
-    ];
+        catch{
+            console.log('hahah')
+        }
+    }
+
+    useEffect(() => {
+        getAllDocs()
+    }, []);
+
+    
 
     // Поиск через Elasticsearch
     const handleSearch = async (query: string) => {
-        if (!query.trim()) {
+        if (query.trim() === "") {
             setSearchResults([]);
             return;
         }
@@ -80,7 +47,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
                 offset: 0
             };
             const response = await documentService.searchDocuments(params);
-            setSearchResults(response.documents || []);
+            setSearchResults(response.results);
         } catch (error) {
             console.error('Search error:', error);
             setSearchResults([]);
@@ -90,11 +57,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
     };
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => {
-            handleSearch(searchQuery);
-        }, 500);
-
-        return () => clearTimeout(timeoutId);
+        handleSearch(searchQuery);
     }, [searchQuery]);
 
     const toggleSection = (sectionId: string) => {
@@ -137,7 +100,7 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
                 {searchQuery && (
                     <div className="search-results">
                         <h4>Результаты поиска:</h4>
-                        {searchResults.length > 0 ? (
+                        {searchResults && 
                             <ul className="search-results-list">
                                 {searchResults.map((doc) => (
                                     <li key={doc.id}>
@@ -146,16 +109,11 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
                                             onClick={() => handleSearchResultClick(doc.id)}
                                         >
                                             <div className="search-result-title">{doc.title}</div>
-                                            <div className="search-result-preview">
-                                                {doc.content.substring(0, 100)}...
-                                            </div>
                                         </button>
                                     </li>
                                 ))}
                             </ul>
-                        ) : (
-                            !isSearching && <div className="no-results">Ничего не найдено</div>
-                        )}
+                        }
                     </div>
                 )}
 
@@ -165,33 +123,12 @@ const DocsSidebar: React.FC<DocsSidebarProps> = ({ onDocSelect }) => {
                             <li key={section.id} className="menu-section">
                                 <button
                                     className={`section-header ${openSections.has(section.id) ? 'open' : ''}`}
-                                    onClick={() => toggleSection(section.id)}
+                                    onClick={() => onDocSelect(section.id)}
                                 >
                                     <span>{section.title}</span>
-                                    <svg
-                                        className={`chevron ${openSections.has(section.id) ? 'rotate-90' : ''}`}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                   
                                 </button>
 
-                                {section.items && openSections.has(section.id) && (
-                                    <ul className="submenu">
-                                        {section.items.map((item) => (
-                                            <li key={item.id}>
-                                                <button
-                                                    className="submenu-item"
-                                                    onClick={() => handleDocClick(item.id)}
-                                                >
-                                                    {item.title}
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
                             </li>
                         ))}
                     </ul>

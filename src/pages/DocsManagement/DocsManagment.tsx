@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import DocsHeader from '../../components/header/header.tsx';
-import { documentService, type DocumentOut, type CreateDocumentData, type UpdateDocumentData } from '../../api/documentService';
+import { documentService, type DocumentBase, type CreateDocumentData, type UpdateDocumentData } from '../../api/documentService';
 import { userService } from '../../api/userService';
 import { useNavigate } from 'react-router-dom';
-import DocsManagementSidebar from "../../components/DocsManagment/DocsManagementSidebar.tsx";
-import DocsEditor from "../../components/DocsManagment/DocsEditor.tsx";
+import DocsManagementSidebar from "./components/DocsManagementSidebar.tsx";
+import DocsEditor from "./components/DocsEditor.tsx";
 
 const DocsManagement: React.FC = () => {
-    const [documents, setDocuments] = useState<DocumentOut[]>([]);
-    const [selectedDoc, setSelectedDoc] = useState<DocumentOut | null>(null);
+    const [documents, setDocuments] = useState<DocumentBase[]>([]);
+    const [selectedDoc, setSelectedDoc] = useState<DocumentBase | null>(null);
     const [loading, setLoading] = useState(false);
     const [userRole, setUserRole] = useState<string>('viewer');
     const [mode, setMode] = useState<'view' | 'edit' | 'create'>('view');
@@ -38,7 +38,7 @@ const DocsManagement: React.FC = () => {
         loadData();
     }, [navigate]);
 
-    const handleDocSelect = (doc: DocumentOut) => {
+    const handleDocSelect = (doc: DocumentBase) => {
         setSelectedDoc(doc);
         setMode('view');
     };

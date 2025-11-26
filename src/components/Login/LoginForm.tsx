@@ -1,8 +1,10 @@
-// src/components/Login/LoginForm.tsx
 import React, { useState } from 'react';
 import { authService } from '../../api/authService';
 import type { LoginData } from '../../api/authService';
 import { useNavigate } from 'react-router-dom';
+// import jwt from 'jsonwebtoken';
+
+
 
 const LoginForm: React.FC = () => {
     const [formData, setFormData] = useState<LoginData>({
@@ -28,8 +30,13 @@ const LoginForm: React.FC = () => {
 
         try {
             const response = await authService.login(formData);
+
             localStorage.setItem('auth_token', response.access_token);
             localStorage.setItem('isAuthenticated', 'true');
+
+            // const decodedUnverified = jwt.decode(response.access_token);
+            // console.log(decodedUnverified)
+            // localStorage.setItem("me", decodedUnverified || "");
             navigate('/docs');
         } catch (err: any) {
             setError(err.response?.data?.detail || 'Ошибка авторизации');

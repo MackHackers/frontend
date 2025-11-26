@@ -7,14 +7,12 @@ export interface DocumentBase {
     author: string;
     tags: string[];
     metadata: Record<string, any>;
-    created_at?: string;
-    updated_at?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface DocumentOut extends DocumentBase {
-    created_at: string;
-    updated_at: string;
-    creator: string;
+
 }
 
 export interface SearchParams {
@@ -24,15 +22,19 @@ export interface SearchParams {
 }
 
 export interface SearchResponse {
-    documents: DocumentOut[];
+    results: any;
     total: number;
 }
 
 export interface CreateDocumentData {
+    id: string;
     title: string;
     content: string;
     tags: string[];
-    metadata?: Record<string, any>;
+    metadata: Record<string, any>;
+    created_at: string;
+    updated_at: string;
+    author: string;
 }
 
 export interface UpdateDocumentData {
@@ -43,13 +45,16 @@ export interface UpdateDocumentData {
 }
 
 export const documentService = {
-    async createDocument(data: CreateDocumentData): Promise<DocumentOut> {
-        const response = await api.post<DocumentOut>('/documents/create', data);
+    async createDocument(data: CreateDocumentData): Promise<DocumentBase> {
+        console.log(data)
+        const response = await api.post<DocumentBase>('/documents/create', data);
         return response.data;
     },
 
     async searchDocuments(params: SearchParams): Promise<SearchResponse> {
         const response = await api.get<SearchResponse>('/documents/search', { params });
+        console.log("search resp:")
+        console.log(response.data.results)
         return response.data;
     },
 
@@ -60,8 +65,8 @@ export const documentService = {
         return response.data;
     },
 
-    async updateDocument(docId: string, data: UpdateDocumentData): Promise<DocumentOut> {
-        const response = await api.put<DocumentOut>(`/documents/${docId}`, data);
+    async updateDocument(docId: string, data: UpdateDocumentData): Promise<DocumentBase> {
+        const response = await api.put<DocumentBase>(`/documents/${docId}`, data);
         return response.data;
     },
 
@@ -70,7 +75,14 @@ export const documentService = {
     },
 
     async getAllDocuments(): Promise<DocumentOut[]> {
-        const response = await api.get<DocumentOut[]>('/documents/all');
-        return response.data;
+        const response = await api.get<string[]>('/documents/all');
+        console.log(response.data)
+        let docs: any[] = []
+        for(let i = 0; i < response.data.length; i++){
+            const newDoc = await this.getDocument(response.data[i]);
+            docs = [...docs, newDoc]
+        }
+        console.log(docs)
+        return docs;
     }
 };

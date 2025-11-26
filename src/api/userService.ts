@@ -5,9 +5,14 @@ export interface UserInfo {
     role: 'viewer' | 'manager' | 'root';
 }
 
+export let me: any = null; 
+
 export const userService = {
+
+
     async getCurrentUser(): Promise<UserInfo> {
-        const response = await api.get<UserInfo>('/users/me');
+        const response = await api.get<UserInfo>('/me');
+        me = response.data;
         return response.data;
     },
 

@@ -10,6 +10,7 @@ export const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({
                                                                             children,
                                                                             userRole
                                                                         }) => {
+                                                                            
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
     if (!isAuthenticated) {

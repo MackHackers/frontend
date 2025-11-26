@@ -27,6 +27,7 @@ export const authService = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
+        
         return response.data;
     },
 

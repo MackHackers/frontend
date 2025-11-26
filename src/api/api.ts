@@ -1,15 +1,10 @@
 import axios from 'axios';
 
-const URL = "https://api.rule34.xxx";
-const API_KEY = "a8b90fdc136ecc53a8c48725ced350c1";
-const USER_ID = 5474222;
+const URL = "http://localhost:8000";
+
 
 const api = axios.create({
     baseURL: URL,
-    params: {
-        api_key: API_KEY,
-        user_id: USER_ID
-    },
     headers: {
         'Content-Type': 'application/json'
     }

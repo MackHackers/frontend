@@ -59,7 +59,7 @@ const DocsHeader: React.FC = () => {
         <header className="header">
             <div className="header-container">
                 <div className="header-left">
-                    <div className="logo">
+                    <div className="logo" onClick={handleDocsClick}>
                         <div className="logo-icon">⚡</div>
                         <span className="logo-text">SetlBase</span>
                     </div>

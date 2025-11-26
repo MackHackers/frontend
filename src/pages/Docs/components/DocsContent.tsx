@@ -1,4 +1,3 @@
-// src/components/Docs/DocsContent.tsx
 import React from 'react';
 
 interface DocsContentProps {

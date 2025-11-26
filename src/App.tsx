@@ -11,8 +11,11 @@ import { userService } from './api/userService';
 import DocsManagement from "./pages/DocsManagement/DocsManagment.tsx";
 import UserManagement from "./pages/UserManagment/UserManagment.tsx";
 
-const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
-const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
+// const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
+// const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
+
+import Auth from "./pages/Auth/Auth.tsx";
+import NotFound from "./pages/NotFoundPage/NotFound.tsx";
 
 function App() {
     const [userRole, setUserRole] = useState<string>('viewer');
@@ -39,29 +42,29 @@ function App() {
                         <Route path="/auth" element={<Auth />} />
                         <Route
                             path="/docs"
-                            element={<DocsPage />}
-                            // element={
-                            //     <ProtectedRoute>
-                            //         <DocsPage />
-                            //     </ProtectedRoute>
-                            // }
+                            // element={<DocsPage />}
+                            element={
+                                <ProtectedRoute>
+                                    <DocsPage />
+                                </ProtectedRoute>
+                            }
                         />
                         <Route
                             path="/docs-management"
                             element={
-                                <DocsManagement />
-                                // <AdminProtectedRoute userRole={userRole}>
-                                //     <DocsManagement />
-                                // </AdminProtectedRoute>
+                                // <DocsManagement />
+                                <AdminProtectedRoute userRole={userRole}>
+                                    <DocsManagement />
+                                </AdminProtectedRoute>
                             }
                         />
                         <Route
                             path="/user-management"
                             element={
-                                <UserManagement />
-                                // <AdminProtectedRoute userRole={userRole}>
-                                //     <UserManagement />
-                                // </AdminProtectedRoute>
+                                // <UserManagement />
+                                <AdminProtectedRoute userRole={userRole}>
+                                    <UserManagement />
+                                </AdminProtectedRoute>
                             }
                         />
                         <Route path="*" element={<NotFound />} />
