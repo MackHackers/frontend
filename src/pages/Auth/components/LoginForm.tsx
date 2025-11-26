@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { authService } from '../../api/authService';
-import type { LoginData } from '../../api/authService';
+import { authService } from '../../../api/authService';
+import type { LoginData } from '../../../api/authService';
 import { useNavigate } from 'react-router-dom';
-// import jwt from 'jsonwebtoken';
 
 
 
@@ -11,6 +10,7 @@ const LoginForm: React.FC = () => {
         username: '',
         password: ''
     });
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -28,15 +28,12 @@ const LoginForm: React.FC = () => {
         setLoading(true);
         setError('');
 
+
         try {
             const response = await authService.login(formData);
 
             localStorage.setItem('auth_token', response.access_token);
             localStorage.setItem('isAuthenticated', 'true');
-
-            // const decodedUnverified = jwt.decode(response.access_token);
-            // console.log(decodedUnverified)
-            // localStorage.setItem("me", decodedUnverified || "");
             navigate('/docs');
         } catch (err: any) {
             setError(err.response?.data?.detail || 'Ошибка авторизации');

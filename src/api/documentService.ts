@@ -3,6 +3,7 @@ import api from './api';
 export interface DocumentBase {
     id: string;
     title: string;
+    deleted: boolean;
     content: string;
     author: string;
     tags: string[];
@@ -15,19 +16,10 @@ export interface DocumentOut extends DocumentBase {
 
 }
 
-export interface SearchParams {
-    q?: string;
-    limit?: number;
-    offset?: number;
-}
-
-export interface SearchResponse {
-    results: any;
-    total: number;
-}
 
 export interface CreateDocumentData {
     id: string;
+    deleted: boolean;
     title: string;
     content: string;
     tags: string[];
@@ -38,10 +30,22 @@ export interface CreateDocumentData {
 }
 
 export interface UpdateDocumentData {
+    id: string;
     title?: string;
     content?: string;
     tags?: string[];
     metadata?: Record<string, any>;
+}
+
+export interface SearchParams {
+    q?: string;
+    limit?: number;
+    offset?: number;
+}
+
+export interface SearchResponse {
+    results: any;
+    total: number;
 }
 
 export const documentService = {
@@ -65,13 +69,13 @@ export const documentService = {
         return response.data;
     },
 
-    async updateDocument(docId: string, data: UpdateDocumentData): Promise<DocumentBase> {
-        const response = await api.put<DocumentBase>(`/documents/${docId}`, data);
+    async updateDocument(data: DocumentBase): Promise<DocumentBase> {
+        const response = await api.put<DocumentBase>(`/documents/update`, data);
         return response.data;
     },
 
     async deleteDocument(docId: string): Promise<void> {
-        await api.delete(`/documents/${docId}`);
+        await api.delete(`/documents`, {params: {doc_id: docId}});
     },
 
     async getAllDocuments(): Promise<DocumentOut[]> {

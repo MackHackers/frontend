@@ -54,15 +54,18 @@ const DocsManagement: React.FC = () => {
         setMode('create');
     };
 
-    const handleSave = async (data: CreateDocumentData | UpdateDocumentData) => {
+    const handleSave = async (data: CreateDocumentData) => {
         try {
             if (mode === 'create') {
-                const newDoc = await documentService.createDocument(data as CreateDocumentData);
+                const newDoc = await documentService.createDocument(data );
                 setDocuments(prev => [...prev, newDoc]);
                 setSelectedDoc(newDoc);
                 setMode('view');
-            } else if (mode === 'edit' && selectedDoc) {
-                const updatedDoc = await documentService.updateDocument(selectedDoc.id, data as UpdateDocumentData);
+            }
+            
+            if (mode === 'edit' && selectedDoc) {
+                data.id = selectedDoc.id;
+                const updatedDoc = await documentService.updateDocument(data);
                 setDocuments(prev => prev.map(doc =>
                     doc.id === selectedDoc.id ? updatedDoc : doc
                 ));
@@ -81,7 +84,6 @@ const DocsManagement: React.FC = () => {
         if (window.confirm(`Вы уверены, что хотите удалить документ "${selectedDoc.title}"?`)) {
             try {
                 await documentService.deleteDocument(selectedDoc.id);
-                setDocuments(prev => prev.filter(doc => doc.id !== selectedDoc.id));
                 setSelectedDoc(null);
                 setMode('view');
             } catch (error) {

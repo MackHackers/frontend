@@ -19,7 +19,6 @@ const DocsPage: React.FC = () => {
         setLoading(true);
         try {
             const document = await documentService.getDocument(docId);
-            console.log(document)
             setCurrentDoc({
                 title: document.title,
                 description: document.metadata?.description || 'Описание документа',

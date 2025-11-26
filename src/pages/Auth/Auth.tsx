@@ -1,4 +1,4 @@
-import RegisterForm from "../../components/Login/LoginForm.tsx";
+import RegisterForm from "./components/LoginForm.tsx";
 
 const Auth: React.FC = () => {
     return (

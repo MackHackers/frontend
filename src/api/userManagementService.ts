@@ -19,23 +19,18 @@ export interface UpdateUserData {
 }
 
 export const userManagementService = {
-    async getAllUsers(): Promise<User[]> {
-        const response = await api.get<User[]>('/users/');
-        return response.data;
-    },
-
-    async getUser(userId: string): Promise<User> {
-        const response = await api.get<User>(`/users/${userId}`);
-        return response.data;
+    async getAllUsers() {
+        const response: any = await api.get('/users');
+        response.data.map((user: any) => {return {username: user, role: "viewer"} as User})
+        let data: any[] = []
+        response.data.forEach((element: any) => {
+            data = [...data, {username: element, role: "viewer"}]
+        });
+        return data;
     },
 
     async createUser(data: CreateUserData): Promise<User> {
-        const response = await api.post<User>('/users/', data);
-        return response.data;
-    },
-
-    async updateUser(userId: string, data: UpdateUserData): Promise<User> {
-        const response = await api.put<User>(`/users/${userId}`, data);
+        const response = await api.post<User>('/users/register', data);
         return response.data;
     },
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import DocsHeader from '../../components/header/header.tsx';
 import UserManagementSidebar from './components/UserManagementSidebar.tsx';
 import UserEditor from './components/UserEditor.tsx';
@@ -6,7 +6,7 @@ import { userManagementService, type User, type CreateUserData, type UpdateUserD
 import { userService } from '../../api/userService';
 import { useNavigate } from 'react-router-dom';
 
-const UserManagement: React.FC = () => {
+const UserManagement = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(false);
@@ -27,6 +27,8 @@ const UserManagement: React.FC = () => {
                 }
 
                 const usersData = await userManagementService.getAllUsers();
+                console.log("users data:")
+                console.log(usersData)
                 setUsers(usersData);
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -61,14 +63,15 @@ const UserManagement: React.FC = () => {
                 setUsers(prev => [...prev, newUser]);
                 setSelectedUser(newUser);
                 setMode('view');
-            } else if (mode === 'edit' && selectedUser) {
-                const updatedUser = await userManagementService.updateUser(selectedUser.id, data as UpdateUserData);
-                setUsers(prev => prev.map(user =>
-                    user.id === selectedUser.id ? updatedUser : user
-                ));
-                setSelectedUser(updatedUser);
-                setMode('view');
-            }
+            } 
+            // if (mode === 'edit' && selectedUser) {
+            //     const updatedUser = await userManagementService.updateUser(selectedUser.id, data as UpdateUserData);
+            //     setUsers(prev => prev.map(user =>
+            //         user.id === selectedUser.id ? updatedUser : user
+            //     ));
+            //     setSelectedUser(updatedUser);
+            //     setMode('view');
+            // }
         } catch (error) {
             console.error('Error saving user:', error);
             alert('Ошибка при сохранении пользователя');
@@ -79,7 +82,7 @@ const UserManagement: React.FC = () => {
         if (!selectedUser) return;
 
         const currentUser = await userService.getCurrentUser();
-        if (selectedUser.id === currentUser.username) {
+        if (selectedUser.id === currentUser?.username) {
             alert('Нельзя удалить собственный аккаунт');
             return;
         }

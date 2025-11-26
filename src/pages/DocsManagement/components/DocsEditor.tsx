@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface DocsEditorProps {
   document?: DocumentOut | null;
   mode: "view" | "edit" | "create";
-  onSave: (data: CreateDocumentData | UpdateDocumentData) => void;
+  onSave: (data: CreateDocumentData) => void;
   onCancel: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -30,7 +30,7 @@ const DocsEditor = ({
     title: "",
     content: "",
     tags: [] as string[],
-    metadata: {} as Record<string, any>,
+    metadata: {} as Record<string, string>,
   });
   const [tagInput, setTagInput] = useState("");
 
@@ -42,7 +42,9 @@ const DocsEditor = ({
         tags: document.tags,
         metadata: document.metadata || {},
       });
-    } else if (mode === "create") {
+    } 
+    
+    if (mode === "create") {
       setFormData({
         title: "",
         content: "",
@@ -57,6 +59,7 @@ const DocsEditor = ({
 
     const saveData: CreateDocumentData = {
         title: formData.title,
+        deleted: false,
         content: formData.content,
         tags: formData.tags,
         metadata: formData.metadata,
@@ -115,7 +118,7 @@ const DocsEditor = ({
             </button>
             {userRole === "root" && (
               <button className="btn-delete" onClick={onDelete}>
-                Удалить
+                {document.deleted ? "Показать" : "Скрыть"}
               </button>
             )}
           </div>
