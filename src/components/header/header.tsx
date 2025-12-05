@@ -23,67 +23,47 @@ const DocsHeader: React.FC = () => {
     loadUserRole();
   }, []);
 
-  const handleDocsClick = () => {
-    navigate("/docs");
-  };
-
-  const handleDocsManagementClick = () => {
-    navigate("/docs-management");
-  };
-
-  const handleNewsClick = () => {
-    navigate("/news");
-  };
-
-  const handleMainClick = () => {
-    navigate("/main");
-  };
-
   const isManagerOrRoot = ["manager", "root"].includes(userRole);
   const isRoot = userRole === "root";
 
   if (loading) {
     return (
-      <header className="header">
-        <div className="header-container">
-          <div className="header-left">
-            <img className="logo" src={logo} alt="Логотип" />
-            <div className="loading-text">Загрузка...</div>
+        <header className="header">
+          <div className="header-container">
+            <div className="header-left">
+              <img className="logo" src={logo} alt="Логотип" />
+              <div className="loading-text">Загрузка...</div>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
     );
   }
 
   return (
-    <header className="navbar bg-base-200 rounded-xl shadow-md">
-      <div className="navbar-start flex items-center gap-8">
-        <img
-          className="logo"
-          src={logo}
-          onClick={handleMainClick}
-          alt="Логотип"
-        />
-        <button className="btn btn-ghost" onClick={handleNewsClick}>
-          Новости
-        </button>
-        <button className="btn btn-ghost">Обучение</button>
-        <button className="btn btn-ghost">Статьи</button>
-        <button className="btn btn-ghost" onClick={handleDocsClick}>
-          Документы
-        </button>
-      </div>
+      <header className="navbar bg-base-200 rounded-xl shadow-md">
+        <div className="navbar-start flex items-center gap-8">
+          <img
+              className="logo"
+              src={logo}
+              onClick={() => navigate("/main")}
+              alt="Логотип"
+          />
+          <button className="btn btn-ghost" onClick={() => navigate("/news")}>Новости</button>
+          <button className="btn btn-ghost" onClick={() => navigate("/learning")}>Обучение</button>
+          <button className="btn btn-ghost" onClick={() => navigate("/articles")}>Статьи</button>
+          <button className="btn btn-ghost" onClick={() => navigate("/docs")}>Документы</button>
+        </div>
 
-      <div className="navbar-end flex items-center gap-2">
-        {isManagerOrRoot && (
-          <button className="btn btn-ghost" onClick={handleDocsManagementClick}>
-            Администрирование
-          </button>
-        )}
+        <div className="navbar-end flex items-center gap-2">
+          {isManagerOrRoot && (
+              <button className="btn btn-ghost" onClick={() => navigate("/adminPanel")}>
+                Администрирование
+              </button>
+          )}
 
-        <button className="btn btn-ghost">Фамилия Имя</button>
-      </div>
-    </header>
+          <button className="btn btn-ghost" onClick={() => navigate("/account")}>Фамилия Имя</button>
+        </div>
+      </header>
   );
 };
 
