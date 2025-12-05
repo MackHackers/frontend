@@ -1,4 +1,5 @@
 import DocsHeader from "../../components/header/header.tsx";
+import Footer from "../../components/Footer/Footer.tsx";
 
 export default function News() {
     return (
@@ -134,9 +135,7 @@ export default function News() {
                     </div>
                 </div>
             </section>
-
-            {/* FOOTER */}
-            <footer className="text-center text-gray-500 py-6">© 2025 SetlGroup</footer>
+            <Footer/>
         </div>
     );
 }

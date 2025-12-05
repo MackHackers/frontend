@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from "../../components/header/header.tsx";
+import Footer from "../../components/Footer/Footer.tsx";
 
 const NotFound: React.FC = () => (
     <div className="not-found-container">
@@ -10,6 +11,7 @@ const NotFound: React.FC = () => (
         <Link to="/home">
             <button className="not-found-button">Перейти на главную страницу</button>
         </Link>
+        <Footer/>
     </div>
 );
 

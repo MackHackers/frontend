@@ -1,5 +1,6 @@
 import DocsHeader from '../../components/header/header.tsx';
 import {useState} from "react";
+import Footer from "../../components/Footer/Footer.tsx";
 
 const mockNews = Array.from({ length: 40 }).map((_, i) => ({
     id: i + 1,
@@ -76,6 +77,7 @@ export default function NewsPage() {
                     )}
                 </main>
             </div>
+            <Footer/>
         </div>
     );
 }
