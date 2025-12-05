@@ -31,8 +31,12 @@ const DocsHeader: React.FC = () => {
         navigate('/docs-management');
     };
 
-    const handleUserManagementClick = () => {
-        navigate('/user-management');
+    const handleNewsClick = () => {
+        navigate('/news');
+    };
+
+    const handleMainClick = () => {
+        navigate('/main');
     };
 
     const isManagerOrRoot = ['manager', 'root'].includes(userRole);
@@ -58,14 +62,18 @@ const DocsHeader: React.FC = () => {
                     <img
                         className="logo"
                         src={logo}
-                        onClick={handleDocsClick}
+                        onClick={handleMainClick}
                         alt="Логотип"
                     />
                     <nav className="header-nav">
-                        <button className="nav-button">Новости</button>
+                        <button className="nav-button"
+                                onClick={handleNewsClick}
+                        >Новости</button>
                         <button className="nav-button">Обучение</button>
                         <button className="nav-button">Статьи</button>
-                        <button className="nav-button">Документы</button>
+                        <button className="nav-button"
+                                onClick={handleDocsClick}
+                        >Документы</button>
                         <button className="nav-button">FAQ</button>
                     </nav>
                 </div>
