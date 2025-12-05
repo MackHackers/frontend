@@ -43,9 +43,7 @@ const DocsHeader: React.FC = () => {
             <header className="header">
                 <div className="header-container">
                     <div className="header-left">
-                        <img className="logo" src={logo}/>
-                    </div>
-                    <div className="header-right">
+                        <img className="logo" src={logo} alt="Логотип"/>
                         <div className="loading-text">Загрузка...</div>
                     </div>
                 </div>
@@ -57,36 +55,34 @@ const DocsHeader: React.FC = () => {
         <header className="header">
             <div className="header-container">
                 <div className="header-left">
-                    <img className="logo"
-                         src={logo}
-                         onClick={handleDocsClick}>
-                    </img>
-                </div>
-                <div className="header-right">
-                    <button
-                        className="docs-button"
+                    <img
+                        className="logo"
+                        src={logo}
                         onClick={handleDocsClick}
-                    >
-                        Документы
-                    </button>
+                        alt="Логотип"
+                    />
+                    <nav className="header-nav">
+                        <button className="nav-button">Новости</button>
+                        <button className="nav-button">Обучение</button>
+                        <button className="nav-button">Статьи</button>
+                        <button className="nav-button">Документы</button>
+                        <button className="nav-button">FAQ</button>
+                    </nav>
+                </div>
 
+                <div className="header-right">
                     {isManagerOrRoot && (
                         <button
-                            className="management-button"
+                            className="admin-button"
                             onClick={handleDocsManagementClick}
                         >
                             Администрирование
                         </button>
                     )}
 
-                    {isRoot && (
-                        <button
-                            className="management-button"
-                            onClick={handleUserManagementClick}
-                        >
-                            Управление пользователями
-                        </button>
-                    )}
+                    <button className="user-name-button">
+                        Фамилия Имя
+                    </button>
                 </div>
             </div>
         </header>

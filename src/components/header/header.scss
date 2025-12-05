@@ -16,28 +16,87 @@
     height: 64px;
 
     .header-left {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+
       .logo {
+        cursor: pointer;
+        height: 40px;
+        width: auto;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .header-nav {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        font-weight: 600;
-        font-size: 1.25rem;
-        color: #1f2937;
+        gap: 0.5rem;
 
-        .logo-icon {
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .nav-button {
+          padding: 0.5rem 1rem;
+          background: none;
+          color: #1f2937;
+          border: none;
           border-radius: 6px;
-          font-size: 16px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 14px;
+
+          &:hover {
+            background: #f3f4f6;
+            color: #111827;
+          }
+
+          &:active {
+            background: #e5e7eb;
+          }
         }
       }
     }
 
     .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .admin-button {
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        color: #1f2937;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+
+        &:hover {
+          background: #e5e7eb;
+          border-color: #9ca3af;
+        }
+      }
+      .user-name-button {
+        padding: 0.5rem 1rem;
+        background: none;
+        color: #1f2937;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+
+        &:hover {
+          background: #f3f4f6;
+          color: #111827;
+        }
+      }
+
       .docs-button {
         padding: 0.5rem 1rem;
         background: none;
@@ -55,4 +114,10 @@
       }
     }
   }
+}
+
+.loading-text {
+  color: #6b7280;
+  font-size: 14px;
+  margin-left: 1rem;
 }
