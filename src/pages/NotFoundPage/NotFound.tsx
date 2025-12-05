@@ -1,10 +1,7 @@
-import DocsHeader from "../../components/header/header.tsx";
-import Footer from "../../components/Footer/Footer.tsx";
+import { Link } from "react-router";
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen bg-base-200 flex flex-col">
-            <DocsHeader />
 
             <div className="flex flex-col items-center justify-center flex-1 text-center px-4">
                 <h1 className="text-7xl font-bold text-primary mb-4">404</h1>
@@ -13,12 +10,10 @@ export default function NotFound() {
                     Похоже, вы перешли по адресу, которого не существует. Возможно, страница была перемещена или удалена.
                 </p>
 
-                <a href="/main" className="btn btn-primary btn-lg rounded-xl px-8">
+                <Link to="/main" className="btn btn-primary btn-lg rounded-xl px-8">
                     Вернуться на главную
-                </a>
+                </Link>
             </div>
 
-            <Footer />
-        </div>
     );
 }

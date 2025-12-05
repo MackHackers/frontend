@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../api/userService";
 import logo from "../../icons/logo+module.svg";
+import { Link } from "react-router";
 
 const DocsHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -28,42 +29,52 @@ const DocsHeader: React.FC = () => {
 
   if (loading) {
     return (
-        <header className="header">
-          <div className="header-container">
-            <div className="header-left">
-              <img className="logo" src={logo} alt="Логотип" />
-              <div className="loading-text">Загрузка...</div>
-            </div>
+      <header className="header">
+        <div className="header-container">
+          <div className="header-left">
+            <img className="logo" src={logo} alt="Логотип" />
+            <div className="loading-text">Загрузка...</div>
           </div>
-        </header>
+        </div>
+      </header>
     );
   }
 
   return (
-      <header className="navbar bg-base-200 rounded-xl shadow-md">
-        <div className="navbar-start flex items-center gap-8">
-          <img
-              className="logo"
-              src={logo}
-              onClick={() => navigate("/main")}
-              alt="Логотип"
-          />
-          <button className="btn btn-ghost" onClick={() => navigate("/news")}>Новости</button>
-          <button className="btn btn-ghost" onClick={() => navigate("/learning")}>Обучение</button>
-          <button className="btn btn-ghost" onClick={() => navigate("/articles")}>Статьи</button>
-          <button className="btn btn-ghost" onClick={() => navigate("/docs")}>Документы</button>
-        </div>
+    <header className="navbar bg-base-200 rounded-xl shadow-md">
+      <div className="navbar-start flex items-center gap-8">
+        <img
+          className="btn btn-ghost"
+          src={logo}
+          onClick={() => navigate("/main")}
+          alt="Логотип"
+        />
+        <Link className="btn btn-ghost" to="/news">
+          Новости
+        </Link>
+        <Link className="btn btn-ghost" to="/learning">
+          Обучение
+        </Link>
+        <Link className="btn btn-ghost" to="/articles">
+          Статьи
+        </Link>
+        <Link className="btn btn-ghost" to="/docs">
+          Документы
+        </Link>
+      </div>
 
-        <div className="navbar-end flex items-center gap-2">
-          {isManagerOrRoot && (
-              <button className="btn btn-ghost" onClick={() => navigate("/adminPanel")}>
-                Администрирование
-              </button>
-          )}
+      <div className="navbar-end flex items-center gap-2">
+        {isManagerOrRoot && (
+          <Link className="btn btn-ghost" to="/adminPanel">
+            Администрирование
+          </Link>
+        )}
 
-          <button className="btn btn-ghost" onClick={() => navigate("/account")}>Фамилия Имя</button>
-        </div>
-      </header>
+        <button className="btn btn-ghost" onClick={() => navigate("/account")}>
+          Фамилия Имя
+        </button>
+      </div>
+    </header>
   );
 };
 

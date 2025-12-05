@@ -33,14 +33,10 @@ const DocsPage: React.FC = () => {
     };
 
     return (
-        <div className="docs-layout">
-            <DocsHeader />
             <div className="docs-container">
                 <DocsSidebar onDocSelect={loadDocument} />
                 <DocsContent content={currentDoc} loading={loading} />
             </div>
-            <ChatWidget />
-        </div>
     );
 };
 

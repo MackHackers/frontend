@@ -9,7 +9,9 @@ import { userService } from "./api/userService";
 
 // const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
 // const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
-import ScrollToTop from "./components/ScrollToTop.jsx";
+import ScrollToTop from "./components/ScrollToTop.tsx";
+import DocsHeader from "./components/header/header.tsx";
+import Footer from "./components/Footer/Footer.tsx";
 import Auth from "./pages/Auth/Auth.tsx";
 import NotFound from "./pages/NotFoundPage/NotFound.tsx";
 import Main from "./pages/Main/Main.tsx";
@@ -37,7 +39,8 @@ function App() {
     <Router>
       <ScrollToTop />
       <div className="min-w-sceen min-h-screen flex justify-center items-center bg-base-200">
-        <div className="flex justify-center w-[85%]">
+        <div className="flex flex-col min-h-screen items-center w-[85%]">
+          <DocsHeader />
           <Suspense fallback={<LoadingPage />}>
             <Routes>
               <Route path="/" element={<RedirectHandler />} />
@@ -58,6 +61,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          <Footer/>
         </div>
       </div>
     </Router>

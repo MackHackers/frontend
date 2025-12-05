@@ -1,22 +1,15 @@
-import DocsHeader from "../../components/header/header.tsx";
-import Footer from "../../components/Footer/Footer.tsx";
-import { redirect, useNavigate } from "react-router-dom";
 import { Link } from "react-router";
 
 export default function News() {
-  const navigate = useNavigate();
-
   return (
-    <div className="bg-base-200 min-h-screen">
-      <DocsHeader />
-
+    <>
       {/* MAIN TITLE */}
       <section className="flex  items-center justify-center text-center py-10 gap-3">
         <div className="w-[70%] flex flex-col items-center gap-6">
           <h1 className="text-3xl font-bold">База знаний SetlGroup</h1>
           <p className="mt-2 text-gray-500">
-            Здесь собраны все статьи по работе с системами SetlGroup, <br /> разбитые
-            по разделам и категориям для вашего удобства
+            Здесь собраны все статьи по работе с системами SetlGroup, <br />{" "}
+            разбитые по разделам и категориям для вашего удобства
           </p>
 
           <div className="join w-full flex justify-center">
@@ -152,7 +145,6 @@ export default function News() {
           </div>
         </div>
       </section>
-      <Footer />
-    </div>
+    </>
   );
 }
