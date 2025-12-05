@@ -1,83 +1,82 @@
-import React, { useState } from 'react';
-import { authService } from '../../../api/authService';
-import type { LoginData } from '../../../api/authService';
-import { useNavigate } from 'react-router-dom';
-
-
+import React, { useState } from "react";
+import { authService } from "../../../api/authService";
+import type { LoginData } from "../../../api/authService";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
     const [formData, setFormData] = useState<LoginData>({
-        username: '',
-        password: ''
+        username: "",
+        password: "",
     });
-    
+
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-
+        setError("");
 
         try {
             const response = await authService.login(formData);
-
-            localStorage.setItem('auth_token', response.access_token);
-            localStorage.setItem('isAuthenticated', 'true');
-            navigate('/docs');
+            localStorage.setItem("auth_token", response.access_token);
+            localStorage.setItem("isAuthenticated", "true");
+            navigate("/docs");
         } catch (err: any) {
-            setError(err.response?.data?.detail || 'Ошибка авторизации');
+            setError(err.response?.data?.detail || "Ошибка авторизации");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="login-form">
-            <form onSubmit={handleSubmit}>
+        <div className="bg-base-300 p-8 rounded-2xl w-md shadow-2xl">
+            <h2 className="text-2xl font-bold mb-6 text-center">Вход в систему</h2>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 {error && (
-                    <div className="error-message">
-                        {error}
-                    </div>
+                    <div className="alert alert-error py-2 text-sm">{error}</div>
                 )}
-                <div className="input-group">
-                    <span className="input-icon user-icon-small"></span>
+
+                <label className="form-control w-full">
                     <input
                         type="text"
                         name="username"
                         placeholder="Email или имя пользователя"
+                        className="input input-bordered w-full"
                         value={formData.username}
                         onChange={handleChange}
                         required
                     />
-                </div>
-                <div className="input-group">
-                    <span className="input-icon lock-icon"></span>
+                </label>
+
+                <label className="form-control w-full">
                     <input
                         type="password"
                         name="password"
                         placeholder="Введите пароль"
+                        className="input input-bordered w-full"
                         value={formData.password}
                         onChange={handleChange}
                         required
                     />
-                </div>
+                </label>
+
                 <button
                     type="submit"
-                    className="login-button"
+                    className="btn btn-primary w-full mt-2"
                     disabled={loading}
                 >
-                    {loading ? 'Загрузка...' : 'LOGIN'}
+                    {loading ? "Загрузка..." : "Войти"}
                 </button>
             </form>
         </div>

@@ -1,13 +1,12 @@
 import RegisterForm from "./components/LoginForm.tsx";
 
-const Auth: React.FC = () => {
+
+export default function Auth() {
     return (
-        <div className="auth">
-            <div className="auth-container">
-                <RegisterForm/>
-            </div>
+        <div
+            className="min-h-screen w-full bg-cover bg-center flex items-center justify-center p-6  bg-100"
+        >
+            <RegisterForm />
         </div>
     );
-};
-
-export default Auth;
+}
