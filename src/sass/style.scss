@@ -13,7 +13,7 @@
 @use "blocks/docs-managment/sidebar-manag.scss";
 @use "blocks/user-managment/user_managment.scss";
 @use "blocks/user-managment/user_editor.scss";
-@use "blocks/header.scss";
+@use "../components/header/header";
 
 @use "ui/titles.scss";
 @use "ui/buttons.scss";

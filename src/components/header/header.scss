@@ -40,8 +40,8 @@
     .header-right {
       .docs-button {
         padding: 0.5rem 1rem;
-        background: #3b82f6;
-        color: white;
+        background: none;
+        color: #1f2937;
         border: none;
         border-radius: 6px;
         font-weight: 500;
@@ -49,7 +49,8 @@
         transition: all 0.2s;
 
         &:hover {
-          background: #2563eb;
+          background: #3D3D3D;
+          color: white;
         }
       }
     }

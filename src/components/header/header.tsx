@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { userService } from '../../api/userService';
+import logo from "../../icons/logo+module.svg";
 
 const DocsHeader: React.FC = () => {
     const navigate = useNavigate();
@@ -42,10 +43,7 @@ const DocsHeader: React.FC = () => {
             <header className="header">
                 <div className="header-container">
                     <div className="header-left">
-                        <div className="logo">
-                            <div className="logo-icon">⚡</div>
-                            <span className="logo-text">SetlBase</span>
-                        </div>
+                        <img className="logo" src={logo}/>
                     </div>
                     <div className="header-right">
                         <div className="loading-text">Загрузка...</div>
@@ -59,17 +57,17 @@ const DocsHeader: React.FC = () => {
         <header className="header">
             <div className="header-container">
                 <div className="header-left">
-                    <div className="logo" onClick={handleDocsClick}>
-                        <div className="logo-icon">⚡</div>
-                        <span className="logo-text">SetlBase</span>
-                    </div>
+                    <img className="logo"
+                         src={logo}
+                         onClick={handleDocsClick}>
+                    </img>
                 </div>
                 <div className="header-right">
                     <button
                         className="docs-button"
                         onClick={handleDocsClick}
                     >
-                        Docs
+                        Документы
                     </button>
 
                     {isManagerOrRoot && (
@@ -77,7 +75,7 @@ const DocsHeader: React.FC = () => {
                             className="management-button"
                             onClick={handleDocsManagementClick}
                         >
-                            Управление документами
+                            Администрирование
                         </button>
                     )}
 
