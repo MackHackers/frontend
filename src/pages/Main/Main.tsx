@@ -1,6 +1,7 @@
 import DocsHeader from "../../components/header/header.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
+import { Link } from "react-router";
 
 export default function News() {
   const navigate = useNavigate();
@@ -100,9 +101,9 @@ export default function News() {
             </div>
 
             <div className="flex items-center justify-center">
-              <button className="btn btn-primary w-full h-20 text-lg" onClick={() => navigate("/news")}>
+              <Link className="btn btn-primary w-full h-20 text-lg" to="/news">
                 Перейти в раздел новостей →
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ import { userService } from './api/userService';
 
 // const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
 // const NotFound = lazy(() => import('./pages/NotFoundPage/NotFound.tsx'))
-
+import ScrollToTop from "./components/ScrollToTop.jsx"
 import Auth from "./pages/Auth/Auth.tsx";
 import NotFound from "./pages/NotFoundPage/NotFound.tsx";
 import Main from "./pages/Main/Main.tsx";
@@ -35,6 +35,7 @@ function App() {
 
     return (
         <Router>
+            <ScrollToTop />
             <div className="App">
                 <Suspense fallback={<LoadingPage />}>
                     <Routes>
