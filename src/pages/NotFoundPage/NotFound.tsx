@@ -1,18 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Header from "../../components/header/header.tsx";
+import DocsHeader from "../../components/header/header.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
 
-const NotFound: React.FC = () => (
-    <div className="not-found-container">
-        <Header />
-        <h1 className="not-found-title">Error 404</h1>
-        <p className="not-found-message">Page not found</p>
-        <Link to="/home">
-            <button className="not-found-button">Перейти на главную страницу</button>
-        </Link>
-        <Footer/>
-    </div>
-);
+export default function NotFound() {
+    return (
+        <div className="min-h-screen bg-base-200 flex flex-col">
+            <DocsHeader />
 
-export default NotFound;
+            <div className="flex flex-col items-center justify-center flex-1 text-center px-4">
+                <h1 className="text-7xl font-bold text-primary mb-4">404</h1>
+                <h2 className="text-2xl font-semibold mb-2">Страница не найдена</h2>
+                <p className="text-gray-500 max-w-md mb-8">
+                    Похоже, вы перешли по адресу, которого не существует. Возможно, страница была перемещена или удалена.
+                </p>
+
+                <a href="/main" className="btn btn-primary btn-lg rounded-xl px-8">
+                    Вернуться на главную
+                </a>
+            </div>
+
+            <Footer />
+        </div>
+    );
+}
