@@ -1,100 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userService } from '../../api/userService';
+import { userService } from "../../api/userService";
 import logo from "../../icons/logo+module.svg";
 
 const DocsHeader: React.FC = () => {
-    const navigate = useNavigate();
-    const [userRole, setUserRole] = useState<string>('viewer');
-    const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<string>("viewer");
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const loadUserRole = async () => {
-            try {
-                const role = await userService.getUserRole();
-                setUserRole(role);
-            } catch (error) {
-                console.error('Error loading user role:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadUserRole();
-    }, []);
-
-    const handleDocsClick = () => {
-        navigate('/docs');
+  useEffect(() => {
+    const loadUserRole = async () => {
+      try {
+        const role = await userService.getUserRole();
+        setUserRole(role);
+      } catch (error) {
+        console.error("Error loading user role:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleDocsManagementClick = () => {
-        navigate('/docs-management');
-    };
+    loadUserRole();
+  }, []);
 
-    const handleNewsClick = () => {
-        navigate('/news');
-    };
+  const handleDocsClick = () => {
+    navigate("/docs");
+  };
 
-    const handleMainClick = () => {
-        navigate('/main');
-    };
+  const handleDocsManagementClick = () => {
+    navigate("/docs-management");
+  };
 
-    const isManagerOrRoot = ['manager', 'root'].includes(userRole);
-    const isRoot = userRole === 'root';
+  const handleNewsClick = () => {
+    navigate("/news");
+  };
 
-    if (loading) {
-        return (
-            <header className="header">
-                <div className="header-container">
-                    <div className="header-left">
-                        <img className="logo" src={logo} alt="Логотип"/>
-                        <div className="loading-text">Загрузка...</div>
-                    </div>
-                </div>
-            </header>
-        );
-    }
+  const handleMainClick = () => {
+    navigate("/main");
+  };
 
+  const isManagerOrRoot = ["manager", "root"].includes(userRole);
+  const isRoot = userRole === "root";
+
+  if (loading) {
     return (
-        <header className="header">
-            <div className="header-container">
-                <div className="header-left">
-                    <img
-                        className="logo"
-                        src={logo}
-                        onClick={handleMainClick}
-                        alt="Логотип"
-                    />
-                    <nav className="header-nav">
-                        <button className="nav-button"
-                                onClick={handleNewsClick}
-                        >Новости</button>
-                        <button className="nav-button">Обучение</button>
-                        <button className="nav-button">Статьи</button>
-                        <button className="nav-button"
-                                onClick={handleDocsClick}
-                        >Документы</button>
-                        <button className="nav-button">FAQ</button>
-                    </nav>
-                </div>
-
-                <div className="header-right">
-                    {isManagerOrRoot && (
-                        <button
-                            className="admin-button"
-                            onClick={handleDocsManagementClick}
-                        >
-                            Администрирование
-                        </button>
-                    )}
-
-                    <button className="user-name-button">
-                        Фамилия Имя
-                    </button>
-                </div>
-            </div>
-        </header>
+      <header className="header">
+        <div className="header-container">
+          <div className="header-left">
+            <img className="logo" src={logo} alt="Логотип" />
+            <div className="loading-text">Загрузка...</div>
+          </div>
+        </div>
+      </header>
     );
+  }
+
+  return (
+    <header className="navbar bg-base-200 rounded-xl shadow-md">
+      <div className="navbar-start flex items-center gap-8">
+        <img
+          className="logo"
+          src={logo}
+          onClick={handleMainClick}
+          alt="Логотип"
+        />
+        <button className="btn btn-ghost" onClick={handleNewsClick}>
+          Новости
+        </button>
+        <button className="btn btn-ghost">Обучение</button>
+        <button className="btn btn-ghost">Статьи</button>
+        <button className="btn btn-ghost" onClick={handleDocsClick}>
+          Документы
+        </button>
+      </div>
+
+      <div className="navbar-end flex items-center gap-2">
+        {isManagerOrRoot && (
+          <button className="btn btn-ghost" onClick={handleDocsManagementClick}>
+            Администрирование
+          </button>
+        )}
+
+        <button className="btn btn-ghost">Фамилия Имя</button>
+      </div>
+    </header>
+  );
 };
 
 export default DocsHeader;
