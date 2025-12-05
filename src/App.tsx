@@ -18,6 +18,17 @@ import Main from "./pages/Main/Main.tsx";
 import News from "./pages/News/NewsPage.tsx";
 import LearningPage from "./pages/Learning/Learning.tsx";
 import ArticlesPage from "./pages/Articles/Articles.tsx";
+import { Outlet } from "react-router";
+
+function BaseLayout() {
+  return (
+    <>
+      <DocsHeader />
+      <Outlet />
+      <Footer />
+    </>
+  );
+}
 
 function App() {
   const [userRole, setUserRole] = useState<string>("viewer");
@@ -40,28 +51,28 @@ function App() {
       <ScrollToTop />
       <div className="min-w-sceen min-h-screen flex justify-center items-center bg-base-200">
         <div className="flex flex-col min-h-screen items-center w-[85%]">
-          <DocsHeader />
           <Suspense fallback={<LoadingPage />}>
             <Routes>
               <Route path="/" element={<RedirectHandler />} />
               <Route path="/auth" element={<Auth />} />
-              <Route path="/main" element={<Main />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/learning" element={<LearningPage />} />
-              <Route path="/articles" element={<ArticlesPage />} />
-              <Route
-                path="/docs"
-                element={<DocsPage />}
-                // element={
-                //     <ProtectedRoute>
-                //         <DocsPage />
-                //     </ProtectedRoute>
-                // }
-              />
+              <Route element={<BaseLayout />}>
+                <Route path="/main" element={<Main />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/learning" element={<LearningPage />} />
+                <Route path="/articles" element={<ArticlesPage />} />
+                <Route
+                  path="/docs"
+                  element={<DocsPage />}
+                  // element={
+                  //     <ProtectedRoute>
+                  //         <DocsPage />
+                  //     </ProtectedRoute>
+                  // }
+                />
+              </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-          <Footer/>
         </div>
       </div>
     </Router>

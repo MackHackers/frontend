@@ -4,7 +4,7 @@ export default function News() {
   return (
     <>
       {/* MAIN TITLE */}
-      <section className="flex  items-center justify-center text-center py-10 gap-3">
+      <section className="w-full flex  items-center justify-center text-center py-10 gap-3">
         <div className="w-[70%] flex flex-col items-center gap-6">
           <h1 className="text-3xl font-bold">База знаний SetlGroup</h1>
           <p className="mt-2 text-gray-500">
@@ -27,7 +27,7 @@ export default function News() {
       </section>
 
       {/* CATEGORIES */}
-      <section className="px-10">
+      <section className="w-full px-10">
         <h2 className="text-2xl font-semibold mb-4">Разделы</h2>
         <div className="grid grid-cols-3 gap-4">
           <div className="card bg-base-100 shadow-sm p-6 text-center">
