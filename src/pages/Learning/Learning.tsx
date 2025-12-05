@@ -14,8 +14,7 @@ export default function LearningPage() {
   const [selected, setSelected] = useState("Все темы");
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-10 flex gap-10">
-      {/* Sidebar */}
+    <div className="w-full mx-auto px-6 py-10 flex gap-10">
       <aside className="w-64 bg-white rounded-xl shadow-sm p-4 h-fit">
         <h2 className="text-lg font-semibold mb-4">Каталог тем</h2>
         <ul className="flex flex-col gap-1">
