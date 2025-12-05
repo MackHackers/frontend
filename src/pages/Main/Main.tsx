@@ -114,7 +114,7 @@ export default function News() {
               Здесь вы сможете найти ответы на вопросы, которые чаще всего
               интересуют пользователей базы знаний
             </p>
-            <img src="https://placehold.co/400x400" className="rounded-xl" />
+            <img src="/faq_figure.png" className="rounded-xl" />
           </div>
 
           <div className="col-span-2 space-y-2">
