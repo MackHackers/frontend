@@ -14,6 +14,8 @@ import Auth from "./pages/Auth/Auth.tsx";
 import NotFound from "./pages/NotFoundPage/NotFound.tsx";
 import Main from "./pages/Main/Main.tsx";
 import News from "./pages/News/NewsPage.tsx";
+import LearningPage from "./pages/Learning/Learning.tsx";
+import ArticlesPage from "./pages/Articles/Articles.tsx";
 
 function App() {
     const [userRole, setUserRole] = useState<string>('viewer');
@@ -40,6 +42,8 @@ function App() {
                         <Route path="/auth" element={<Auth />} />
                         <Route path="/main" element={<Main />} />
                         <Route path="/news" element={<News />} />
+                        <Route path="/learning" element={<LearningPage />} />
+                        <Route path="/articles" element={<ArticlesPage />} />
                         <Route
                             path="/docs"
                             element={<DocsPage />}
