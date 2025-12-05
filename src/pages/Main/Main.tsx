@@ -1,7 +1,10 @@
 import DocsHeader from "../../components/header/header.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
+import { useNavigate } from "react-router-dom";
 
 export default function News() {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-base-200 min-h-screen">
       <DocsHeader />
@@ -97,7 +100,7 @@ export default function News() {
             </div>
 
             <div className="flex items-center justify-center">
-              <button className="btn btn-primary w-full h-20 text-lg">
+              <button className="btn btn-primary w-full h-20 text-lg" onClick={() => navigate("/news")}>
                 Перейти в раздел новостей →
               </button>
             </div>
