@@ -30,15 +30,13 @@ export default function News() {
       <section className="w-full px-10">
         <h2 className="text-2xl font-semibold mb-4">Разделы</h2>
         <div className="grid grid-cols-3 gap-4">
-          <div className="card bg-base-100 shadow-sm p-6 text-center">
-            <h3 className="font-bold">Строительство</h3>
-          </div>
-          <div className="card bg-base-100 shadow-sm p-6 text-center">
-            <h3 className="font-bold">Обучение</h3>
-          </div>
-          <div className="card bg-base-100 shadow-sm p-6 text-center">
-            <h3 className="font-bold">Документы</h3>
-          </div>
+          <Link to="/articles" className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg">
+            Статьи →</Link>
+          <Link to="/learning" className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg">
+            Обучение →</Link>
+          <Link to="/docs" className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg">
+            Документы →
+          </Link>
         </div>
       </section>
 
