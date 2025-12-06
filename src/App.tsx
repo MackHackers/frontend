@@ -1,5 +1,5 @@
 // src/App.tsx
-import { lazy, Suspense, useState, useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import LoadingPage from "./components/loading/LoadingPage.tsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -20,6 +20,8 @@ import LearningPage from "./pages/Learning/Learning.tsx";
 import ArticlesPage from "./pages/Articles/Articles.tsx";
 import { Outlet } from "react-router";
 import CreateArticlePage from "./pages/Articles/CreateArticlePage.tsx";
+import AdminPanel from "./pages/AdminPanel/AdminPanel.tsx";
+import SearchPage from "./pages/Search/SearchPage.tsx";
 
 function BaseLayout() {
   return (
@@ -32,13 +34,10 @@ function BaseLayout() {
 }
 
 function App() {
-  const [userRole, setUserRole] = useState<string>("viewer");
-
   useEffect(() => {
     const loadUserRole = async () => {
       try {
-        const role = await userService.getUserRole();
-        setUserRole(role);
+        await userService.getUserRole();
       } catch (error) {
         console.error("Error loading user role:", error);
       }
@@ -62,6 +61,8 @@ function App() {
                 <Route path="/learning" element={<LearningPage />} />
                 <Route path="/articles" element={<ArticlesPage />} />
                 <Route path="/create-articles" element={<CreateArticlePage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/adminPanel" element={<AdminPanel />} />
                 <Route
                   path="/docs"
                   element={<DocsPage />}
