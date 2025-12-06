@@ -73,9 +73,9 @@ const DocsHeader: React.FC = () => {
           </Link>
         )}
 
-        <button className="btn btn-ghost" onClick={() => navigate("/account")}>
+        <Link className="btn btn-ghost" to="/account">
           Фамилия Имя
-        </button>
+        </Link>
       </div>
     </header>
   );
