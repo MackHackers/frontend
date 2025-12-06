@@ -19,6 +19,7 @@ import News from "./pages/News/NewsPage.tsx";
 import LearningPage from "./pages/Learning/Learning.tsx";
 import ArticlesPage from "./pages/Articles/Articles.tsx";
 import { Outlet } from "react-router";
+import CreateArticlePage from "./pages/Articles/CreateArticlePage.tsx";
 
 function BaseLayout() {
   return (
@@ -60,6 +61,7 @@ function App() {
                 <Route path="/news" element={<News />} />
                 <Route path="/learning" element={<LearningPage />} />
                 <Route path="/articles" element={<ArticlesPage />} />
+                <Route path="/create-articles" element={<CreateArticlePage />} />
                 <Route
                   path="/docs"
                   element={<DocsPage />}
