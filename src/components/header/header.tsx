@@ -47,7 +47,7 @@ const DocsHeader: React.FC = () => {
           className="btn btn-ghost"
           src={logo}
           onClick={() => navigate("/main")}
-          alt="Логотип"
+          alt="Logo"
         />
         <Link className="btn btn-ghost" to="/news">
           Новости
