@@ -25,6 +25,7 @@ const DocsHeader: React.FC = () => {
   }, []);
 
   const isManagerOrRoot = ["manager", "root"].includes(userRole);
+  // const isRoot = userRole === "root";
 
   if (loading) {
     return (
