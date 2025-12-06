@@ -61,12 +61,13 @@ const DocsHeader: React.FC = () => {
         <Link className="btn btn-ghost" to="/docs">
           Документы
         </Link>
-        <Link className="btn btn-ghost" to="/search">
-          Поиск
-        </Link>
       </div>
 
       <div className="navbar-end flex items-center gap-2">
+        <Link className="btn btn-ghost" to="/search">
+          Поиск
+        </Link>
+
         {isManagerOrRoot && (
           <Link className="btn btn-ghost" to="/adminPanel">
             Администрирование
