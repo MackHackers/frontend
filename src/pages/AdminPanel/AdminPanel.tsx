@@ -868,12 +868,12 @@ function ArticlesManagement() {
   const [showModal, setShowModal] = useState(false);
   const [editingArticle, setEditingArticle] = useState<DocumentOut | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [textContent, setTextContent] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     parentCategory: "",
     tags: "",
   });
-  const [textContent, setTextContent] = useState("");
 
   useEffect(() => {
     loadArticles();

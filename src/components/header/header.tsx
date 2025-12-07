@@ -29,57 +29,54 @@ const DocsHeader: React.FC = () => {
 
   if (loading) {
     return (
-        <header className="header">
-          <div className="header-container">
-            <div className="header-left">
-              <img className="logo" src={logo} alt="Логотип" />
-              <div className="loading-text">Загрузка...</div>
-            </div>
+      <header className="header">
+        <div className="header-container">
+          <div className="header-left">
+            <img className="logo" src={logo} alt="Логотип" />
+            <div className="loading-text">Загрузка...</div>
           </div>
-        </header>
+        </div>
+      </header>
     );
   }
 
   return (
-      <header className="navbar bg-base-200 rounded-xl shadow-md">
-        <div className="flex w-full justify-between">
-          <div className="flex items-center gap-8">
-            <img
-                className="btn btn-ghost"
-                src={logo}
-                onClick={() => navigate("/main")}
-                alt="Logo"
-            />
-            <Link className="btn btn-ghost" to="/news">
-              Новости
-            </Link>
-            <Link className="btn btn-ghost" to="/learning">
-              Обучение
-            </Link>
-            <Link className="btn btn-ghost" to="/articles">
-              Статьи
-            </Link>
-            <Link className="btn btn-ghost" to="/docs">
-              Документы
-            </Link>
-            <Link className="btn btn-ghost" to="/search">
-              Поиск
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {isManagerOrRoot && (
-                <Link className="btn btn-ghost" to="/adminPanel">
-                  Администрирование
-                </Link>
-            )}
-
-            <Link className="btn btn-ghost" to="/account">
-              Фамилия Имя
-            </Link>
-          </div>
+    <header className="navbar bg-base-200 rounded-xl shadow-md">
+      <div className="flex w-full justify-between">
+        <div className="flex items-center gap-8">
+          <img
+            className="btn btn-ghost"
+            src={logo}
+            onClick={() => navigate("/main")}
+            alt="Logo"
+          />
+          <Link className="btn btn-ghost" to="/news">
+            Новости
+          </Link>
+          <Link className="btn btn-ghost" to="/learning">
+            Обучение
+          </Link>
+          <Link className="btn btn-ghost" to="/articles">
+            Статьи
+          </Link>
+          <Link className="btn btn-ghost" to="/search">
+            Поиск
+          </Link>
         </div>
-      </header>
+
+        <div className="flex items-center gap-2">
+          {isManagerOrRoot && (
+            <Link className="btn btn-ghost" to="/adminPanel">
+              Администрирование
+            </Link>
+          )}
+
+          <Link className="btn btn-ghost" to="/account">
+            Фамилия Имя
+          </Link>
+        </div>
+      </div>
+    </header>
   );
 };
 

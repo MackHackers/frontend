@@ -4,7 +4,6 @@ import LoadingPage from "./components/loading/LoadingPage.tsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import RedirectHandler from "./components/RedirectHandler/RedirectHandler.tsx";
-import DocsPage from "./pages/Docs/Docs.tsx";
 import { userService } from "./api/userService";
 
 // const Auth = lazy(() => import('./pages/Auth/Auth.tsx'));
@@ -22,6 +21,7 @@ import { Outlet } from "react-router";
 import CreateArticlePage from "./pages/Articles/CreateArticlePage.tsx";
 import AdminPanel from "./pages/AdminPanel/AdminPanel.tsx";
 import SearchPage from "./pages/Search/SearchPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
 
 function BaseLayout() {
   return (
@@ -55,25 +55,21 @@ function App() {
             <Routes>
               <Route path="/" element={<RedirectHandler />} />
               <Route path="/auth" element={<Auth />} />
-              <Route element={<BaseLayout />}>
-                <Route path="/main" element={<Main />} />
-                <Route path="/news" element={<News />} />
-                <Route path="/learning" element={<LearningPage />} />
-                <Route path="/articles" element={<ArticlesPage />} />
-                <Route path="/create-articles" element={<CreateArticlePage />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/adminPanel" element={<AdminPanel />} />
-                <Route
-                  path="/docs"
-                  element={<DocsPage />}
-                  // element={
-                  //     <ProtectedRoute>
-                  //         <DocsPage />
-                  //     </ProtectedRoute>
-                  // }
-                />
+              <Route element={<ProtectedRoute />}>
+                <Route element={<BaseLayout />}>
+                  <Route path="/main" element={<Main />} />
+                  <Route path="/news" element={<News />} />
+                  <Route path="/learning" element={<LearningPage />} />
+                  <Route path="/articles" element={<ArticlesPage />} />
+                  <Route
+                    path="/create-articles"
+                    element={<CreateArticlePage />}
+                  />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/adminPanel" element={<AdminPanel />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
               </Route>
-              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </div>
