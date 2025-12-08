@@ -80,13 +80,13 @@ export const documentService = {
 
     async getAllDocuments(): Promise<DocumentOut[]> {
         const response = await api.get<string[]>('/documents/all');
-        console.log(response.data)
-        let docs: any[] = []
-        for(let i = 0; i < response.data.length; i++){
-            const newDoc = await this.getDocument(response.data[i]);
-            docs = [...docs, newDoc]
+        if (!response.data || response.data.length === 0) {
+            return [];
         }
-        console.log(docs)
+        // Используем Promise.all для параллельной загрузки документов
+        const docs = await Promise.all(
+            response.data.map((docId: string) => this.getDocument(docId))
+        );
         return docs;
     }
 };

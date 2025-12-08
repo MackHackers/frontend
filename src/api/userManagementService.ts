@@ -19,14 +19,9 @@ export interface UpdateUserData {
 }
 
 export const userManagementService = {
-    async getAllUsers() {
-        const response: any = await api.get('/users');
-        response.data.map((user: any) => {return {username: user, role: "viewer"} as User})
-        let data: any[] = []
-        response.data.forEach((element: any) => {
-            data = [...data, {username: element, role: "viewer"}]
-        });
-        return data;
+    async getAllUsers(): Promise<User[]> {
+        const response = await api.get<User[]>('/users');
+        return response.data;
     },
 
     async createUser(data: CreateUserData): Promise<User> {
@@ -35,6 +30,7 @@ export const userManagementService = {
     },
 
     async deleteUser(userId: string): Promise<void> {
+        // userId в данном случае это username
         await api.delete(`/users/${userId}`);
     }
 };
