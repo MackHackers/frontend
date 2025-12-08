@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { documentService } from "../../api/documentService";
 import type { DocumentOut } from "../../api/documentService";
+import ArticleView from "./ArticleWiew";
 
 export default function ArticlesPage() {
-  const navigate = useNavigate();
   const [articles, setArticles] = useState<DocumentOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Все темы");
+  const [selectedArticle, setSelectedArticle] = useState<DocumentOut | null>(null);
 
   useEffect(() => {
     loadArticles();
@@ -94,8 +94,8 @@ export default function ArticlesPage() {
   };
 
   const handleArticleClick = (article: DocumentOut) => {
-    // Переход на страницу редактирования статьи
-    navigate(`/create-articles?id=${article.id}`);
+    // Открываем модальное окно для просмотра статьи
+    setSelectedArticle(article);
   };
 
   if (loading) {
@@ -190,6 +190,28 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
           ))
         )}
       </div>
+
+      {/* MODAL PREVIEW */}
+      {selectedArticle && (
+        <dialog className="modal modal-open" onClick={() => setSelectedArticle(null)}>
+          <div
+            className="modal-box max-w-4xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ArticleView
+              htmlContent={selectedArticle.content}
+              title={selectedArticle.title}
+              author={selectedArticle.author}
+              subtitle={formatDate(selectedArticle.created_at)}
+            />
+            <div className="modal-action">
+              <button className="btn" onClick={() => setSelectedArticle(null)}>
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 }

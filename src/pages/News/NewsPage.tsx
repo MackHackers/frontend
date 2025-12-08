@@ -92,10 +92,29 @@ export default function NewsPage() {
   // Извлечение изображения из HTML контента
   const getImageFromContent = (content: string | undefined): string | null => {
     if (!content) return null;
-    const imgMatch = content.match(/<img[^>]+src="([^"]+)"/i);
+    
+    // Пробуем найти изображение с двойными кавычками
+    let imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
     if (imgMatch && imgMatch[1]) {
       return imgMatch[1];
     }
+    
+    // Пробуем найти изображение без кавычек (для base64 может быть длинным)
+    imgMatch = content.match(/<img[^>]+src=([^\s>]+)/i);
+    if (imgMatch && imgMatch[1]) {
+      const src = imgMatch[1].replace(/["']/g, ""); // Убираем кавычки если есть
+      // Проверяем, что это валидный URL или base64
+      if (src.startsWith("http") || src.startsWith("data:image") || src.startsWith("/")) {
+        return src;
+      }
+    }
+    
+    // Также проверяем наличие base64 изображений напрямую в контенте
+    const base64Match = content.match(/data:image\/[^;]+;base64,[^"'\s<>]+/i);
+    if (base64Match && base64Match[0]) {
+      return base64Match[0];
+    }
+    
     return null;
   };
 

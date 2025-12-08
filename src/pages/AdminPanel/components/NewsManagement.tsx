@@ -54,6 +54,22 @@ export default function NewsManagement() {
   const handleOpenModal = (item?: DocumentOut) => {
     if (item) {
       setEditingNews(item);
+      
+      // Извлекаем изображение из контента, если оно есть
+      let imagePreview: string | null = null;
+      let textWithoutImage = item.content || "";
+      
+      if (item.content) {
+        // Ищем изображение в HTML
+        const imgMatch = item.content.match(/<img[^>]+src=["']([^"']+)["']/i) || 
+                       item.content.match(/<img[^>]+src=([^\s>]+)/i);
+        if (imgMatch && imgMatch[1]) {
+          imagePreview = imgMatch[1].replace(/["']/g, "");
+          // Удаляем тег img из текста
+          textWithoutImage = item.content.replace(/<img[^>]*>/, "").trim();
+        }
+      }
+      
       setFormData({
         title: item.title,
         content: item.content,
@@ -62,8 +78,8 @@ export default function NewsManagement() {
         company: "",
         users: [],
       });
-      setTextContent(item.content || "");
-      setPhoto({ file: null, preview: null });
+      setTextContent(textWithoutImage);
+      setPhoto({ file: null, preview: imagePreview });
     } else {
       setEditingNews(null);
       setFormData({
@@ -98,18 +114,39 @@ export default function NewsManagement() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Формируем контент с изображением, если оно есть
+      let finalContent = textContent || "";
+      
+      // Проверяем, является ли текст уже HTML (содержит теги)
+      const isHtml = /<[^>]+>/.test(textContent);
+      
+      if (photo.preview) {
+        // Добавляем изображение в начало контента
+        const imgTag = `<img src="${photo.preview}" alt="News image" style="max-width: 100%; height: auto; margin-bottom: 1rem;" />`;
+        if (isHtml) {
+          // Если текст уже HTML, просто добавляем изображение перед ним
+          finalContent = imgTag + textContent;
+        } else {
+          // Если текст обычный, оборачиваем в параграф
+          finalContent = imgTag + (textContent ? `<p>${textContent}</p>` : "");
+        }
+      } else if (textContent && !isHtml) {
+        // Если нет изображения и текст не HTML, оборачиваем в параграф
+        finalContent = `<p>${textContent}</p>`;
+      }
+
       if (editingNews) {
         await newsService.updateDocument({
           ...editingNews,
           title: formData.title,
-          content: textContent,
+          content: finalContent,
           tags: formData.tags,
         });
       } else {
         await newsService.createDocument({
           id: crypto.randomUUID(),
           title: formData.title,
-          content: textContent,
+          content: finalContent,
           tags: [...formData.tags, "news"],
           metadata: { type: "news" },
           author: "",

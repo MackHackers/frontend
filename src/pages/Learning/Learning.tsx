@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { learnService } from "../../api/learnService";
 import type { DocumentOut } from "../../api/learnService";
+import ArticleView from "../Articles/ArticleWiew";
 
 export default function LearningPage() {
   const [learning, setLearning] = useState<DocumentOut[]>([]);
@@ -190,14 +191,11 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
             className="modal-box max-w-4xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold mb-4">{selectedItem.title}</h2>
-            <p className="text-sm opacity-60 mb-4">
-              📅 {formatDate(selectedItem.created_at)}
-              {selectedItem.author && ` | Автор: ${selectedItem.author}`}
-            </p>
-            <div
-              className="prose max-w-none break-words"
-              dangerouslySetInnerHTML={{ __html: selectedItem.content || "" }}
+            <ArticleView
+              htmlContent={selectedItem.content}
+              title={selectedItem.title}
+              author={selectedItem.author}
+              subtitle={formatDate(selectedItem.created_at)}
             />
             <div className="modal-action">
               <button className="btn" onClick={() => setSelectedItem(null)}>
