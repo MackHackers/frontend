@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { marked } from "marked";
 import { documentService } from "../../api/documentService";
-import { useNavigate } from "react-router-dom";
+import type { DocumentOut } from "../../api/documentService";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 type BlockType =
     | "title"
@@ -86,6 +87,9 @@ const htmlToList = (html: string): string[] => {
 
 const CreateArticlePage: React.FC = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const articleId = searchParams.get("id");
+    
     const [blocks, setBlocks] = useState<Block[]>([]);
     const [showMenu, setShowMenu] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -93,9 +97,136 @@ const CreateArticlePage: React.FC = () => {
     const [articleTitle, setArticleTitle] = useState("");
     const [articleTags, setArticleTags] = useState("");
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [editingArticle, setEditingArticle] = useState<DocumentOut | null>(null);
 
-    // Загрузка из localStorage
+    // Функция для парсинга HTML контента обратно в блоки
+    const parseHtmlToBlocks = (html: string, savedBlocks?: Block[]): Block[] => {
+        // Если есть сохраненные блоки в metadata, используем их
+        if (savedBlocks && savedBlocks.length > 0) {
+            return savedBlocks;
+        }
+
+        // Иначе пытаемся парсить HTML
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        const blocks: Block[] = [];
+        
+        // Простой парсер для основных элементов
+        Array.from(tempDiv.children).forEach((element) => {
+            const tagName = element.tagName.toLowerCase();
+            const id = crypto.randomUUID();
+            
+            switch (tagName) {
+                case "h1":
+                    blocks.push({
+                        id,
+                        type: "title",
+                        content: textToHtml(element.textContent || "", "h1")
+                    });
+                    break;
+                case "h2":
+                    blocks.push({
+                        id,
+                        type: "h2",
+                        content: textToHtml(element.textContent || "", "h2")
+                    });
+                    break;
+                case "h3":
+                    blocks.push({
+                        id,
+                        type: "h3",
+                        content: textToHtml(element.textContent || "", "h3")
+                    });
+                    break;
+                case "ul":
+                    const items: string[] = [];
+                    element.querySelectorAll("li").forEach(li => {
+                        items.push(li.textContent || "");
+                    });
+                    blocks.push({
+                        id,
+                        type: "list",
+                        content: listToHtml(items)
+                    });
+                    break;
+                case "p":
+                case "div":
+                    blocks.push({
+                        id,
+                        type: "text",
+                        content: element.innerHTML
+                    });
+                    break;
+                case "img":
+                    const imgSrc = element.getAttribute("src") || "";
+                    if (imgSrc.startsWith("data:")) {
+                        blocks.push({
+                            id,
+                            type: "media",
+                            content: imgSrc
+                        });
+                    }
+                    break;
+            }
+        });
+        
+        return blocks;
+    };
+
+    // Загрузка статьи с бэкенда
+    const loadArticle = async (id: string) => {
+        try {
+            setLoading(true);
+            const article = await documentService.getDocument(id);
+            setEditingArticle(article);
+            
+            // Устанавливаем заголовок и теги
+            setArticleTitle(article.title);
+            const tagsWithoutArticle = article.tags?.filter(t => t !== "article") || [];
+            setArticleTags(tagsWithoutArticle.join("; "));
+            
+            // Восстанавливаем блоки из metadata или парсим HTML
+            const savedBlocks = article.metadata?.blocks as Block[] | undefined;
+            const parsedBlocks = parseHtmlToBlocks(article.content || "", savedBlocks);
+            
+            if (parsedBlocks.length > 0) {
+                setBlocks(parsedBlocks);
+                
+                // Инициализируем editMode для каждого блока
+                const editData: { [key: string]: any } = {};
+                parsedBlocks.forEach(block => {
+                    editData[block.id] = {
+                        rawText: block.type === "title" || block.type === "h2" || block.type === "h3" ||
+                        block.type === "infoRed" || block.type === "infoBlue"
+                            ? htmlToText(block.content)
+                            : block.type === "text"
+                                ? ""
+                                : block.type === "list"
+                                    ? htmlToList(block.content)
+                                    : block.content,
+                        markdown: block.type === "text" ? htmlToText(block.content) : ""
+                    };
+                });
+                setEditMode(editData);
+            }
+        } catch (error) {
+            console.error("Error loading article:", error);
+            alert("Ошибка при загрузке статьи");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Загрузка из localStorage или с бэкенда
     useEffect(() => {
+        // Если есть ID статьи, загружаем с бэкенда
+        if (articleId) {
+            loadArticle(articleId);
+            return;
+        }
+        
+        // Иначе загружаем из localStorage
         const saved = localStorage.getItem(STORAGE_KEY);
         const savedTitle = localStorage.getItem(STORAGE_KEY_TITLE);
         const savedTags = localStorage.getItem(STORAGE_KEY_TAGS);
@@ -142,7 +273,7 @@ const CreateArticlePage: React.FC = () => {
                 console.warn("Failed to parse saved draft", e);
             }
         }
-    }, []);
+    }, [articleId]);
 
     // Автосохранение в HTML формате
     useEffect(() => {
@@ -374,17 +505,30 @@ const CreateArticlePage: React.FC = () => {
                 ? articleTags.split(";").map((t) => t.trim()).filter(Boolean)
                 : [];
 
-            await documentService.createDocument({
-                id: crypto.randomUUID(),
-                title: articleTitle,
-                content: htmlContent,
-                tags: [...tagsArray, "article"],
-                metadata: { type: "article", blocks: blocks },
-                author: "",
-                deleted: false,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            });
+            if (editingArticle) {
+                // Обновляем существующую статью
+                await documentService.updateDocument({
+                    ...editingArticle,
+                    title: articleTitle,
+                    content: htmlContent,
+                    tags: [...tagsArray, "article"],
+                    metadata: { ...editingArticle.metadata, type: "article", blocks: blocks },
+                    updated_at: new Date().toISOString(),
+                });
+            } else {
+                // Создаем новую статью
+                await documentService.createDocument({
+                    id: crypto.randomUUID(),
+                    title: articleTitle,
+                    content: htmlContent,
+                    tags: [...tagsArray, "article"],
+                    metadata: { type: "article", blocks: blocks },
+                    author: "",
+                    deleted: false,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                });
+            }
 
             // Очищаем localStorage после успешного сохранения
             localStorage.removeItem(STORAGE_KEY);
@@ -394,8 +538,9 @@ const CreateArticlePage: React.FC = () => {
             setEditMode({});
             setArticleTitle("");
             setArticleTags("");
+            setEditingArticle(null);
 
-            alert("Статья успешно сохранена!");
+            alert(editingArticle ? "Статья успешно обновлена!" : "Статья успешно сохранена!");
             navigate("/articles");
         } catch (error) {
             console.error("Error saving article:", error);
@@ -438,11 +583,31 @@ const CreateArticlePage: React.FC = () => {
         return editData.rawText !== undefined ? editData.rawText : block.content;
     };
 
+    if (loading) {
+        return (
+            <div className="p-6 w-4xl mx-auto">
+                <div className="bg-white rounded-2xl p-8 shadow-sm border">
+                    <div className="text-center py-8">
+                        <span className="loading loading-spinner loading-lg"></span>
+                        <p className="mt-4">Загрузка статьи...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="p-6 w-4xl mx-auto">
             <div className="bg-white rounded-2xl p-8 shadow-sm border">
                 {/* HEADER */}
                 <div className="mb-8">
+                    {editingArticle && (
+                        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-sm text-blue-700">
+                                Редактирование статьи: <strong>{editingArticle.title}</strong>
+                            </p>
+                        </div>
+                    )}
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Заголовок статьи *
