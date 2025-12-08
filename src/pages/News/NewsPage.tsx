@@ -164,39 +164,7 @@ export default function NewsPage() {
 
         {/* Content */}
         <main className="flex-1">
-          {/* Search */}
-          <div className="flex gap-2 mb-4">
-            <select
-              className="select select-bordered w-40"
-              value={selectedYear || ""}
-              onChange={(e) =>
-                setSelectedYear(e.target.value ? parseInt(e.target.value) : null)
-              }
-            >
-              <option value="">Все года</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              placeholder="Поиск в базе знаний"
-              className="input input-bordered flex-1"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
-            />
-            <button className="btn btn-primary" onClick={handleSearch}>
-              Поиск
-            </button>
-          </div>
-
+      
           {/* News List */}
           {filteredNews.length === 0 ? (
             <div className="bg-base-100 shadow rounded-xl p-8 text-center text-gray-500">

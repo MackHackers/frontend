@@ -121,24 +121,7 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
 
         {/* Content */}
         <div className="flex-1 flex flex-col gap-6">
-          {/* Search */}
-          <div className="bg-white rounded-xl shadow-sm p-4 flex items-center gap-3">
-            <input
-              type="text"
-              placeholder="Поиск в обучающих материалах"
-              className="flex-1 input input-bordered"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
-            />
-            <button className="btn btn-primary" onClick={handleSearch}>
-              🔍
-            </button>
-          </div>
+          
 
           {filteredLearning.length === 0 ? (
             <div className="bg-white p-8 rounded-xl shadow-sm text-center text-gray-500">
