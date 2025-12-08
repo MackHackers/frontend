@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { marked } from "marked";
+import { documentService } from "../../api/documentService";
+import { useNavigate } from "react-router-dom";
 
 type BlockType =
     | "title"
@@ -26,6 +28,8 @@ interface Block {
 }
 
 const STORAGE_KEY = "article_editor_blocks_html";
+const STORAGE_KEY_TITLE = "article_editor_title";
+const STORAGE_KEY_TAGS = "article_editor_tags";
 
 // Утилиты для конвертации в HTML
 const markdownToHtml = (markdown: string): string => {
@@ -81,14 +85,28 @@ const htmlToList = (html: string): string[] => {
 };
 
 const CreateArticlePage: React.FC = () => {
+    const navigate = useNavigate();
     const [blocks, setBlocks] = useState<Block[]>([]);
     const [showMenu, setShowMenu] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [editMode, setEditMode] = useState<{ [key: string]: any }>({});
+    const [articleTitle, setArticleTitle] = useState("");
+    const [articleTags, setArticleTags] = useState("");
+    const [saving, setSaving] = useState(false);
 
     // Загрузка из localStorage
     useEffect(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
+        const savedTitle = localStorage.getItem(STORAGE_KEY_TITLE);
+        const savedTags = localStorage.getItem(STORAGE_KEY_TAGS);
+        
+        if (savedTitle) {
+            setArticleTitle(savedTitle);
+        }
+        if (savedTags) {
+            setArticleTags(savedTags);
+        }
+        
         if (saved) {
             try {
                 const parsed = JSON.parse(saved) as Block[];
@@ -112,6 +130,14 @@ const CreateArticlePage: React.FC = () => {
                     };
                 });
                 setEditMode(editData);
+                
+                // Если заголовок не был сохранен отдельно, попробуем взять из первого блока title
+                if (!savedTitle && parsed.length > 0) {
+                    const firstTitleBlock = parsed.find(b => b.type === "title");
+                    if (firstTitleBlock) {
+                        setArticleTitle(htmlToText(firstTitleBlock.content));
+                    }
+                }
             } catch (e) {
                 console.warn("Failed to parse saved draft", e);
             }
@@ -120,15 +146,20 @@ const CreateArticlePage: React.FC = () => {
 
     // Автосохранение в HTML формате
     useEffect(() => {
-        if (blocks.length === 0) return;
-
         try {
-            // Сохраняем блоки в HTML формате
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks));
+            if (blocks.length > 0) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks));
+            }
+            if (articleTitle) {
+                localStorage.setItem(STORAGE_KEY_TITLE, articleTitle);
+            }
+            if (articleTags) {
+                localStorage.setItem(STORAGE_KEY_TAGS, articleTags);
+            }
         } catch (e) {
             console.warn("Failed to save draft", e);
         }
-    }, [blocks]);
+    }, [blocks, articleTitle, articleTags]);
 
     // Helper для создания контента по умолчанию
     const defaultContentFor = (type: BlockType) => {
@@ -174,10 +205,13 @@ const CreateArticlePage: React.FC = () => {
 
     // Обновление блока с конвертацией в HTML
     const updateBlock = (id: string, value: any, isMarkdown: boolean = false) => {
-        setBlocks((prev) =>
-            prev.map((b) => {
+        let blockType: BlockType | null = null;
+        
+        setBlocks((prev) => {
+            const updated = prev.map((b) => {
                 if (b.id !== id) return b;
 
+                blockType = b.type;
                 let htmlContent;
                 switch (b.type) {
                     case "title":
@@ -208,18 +242,22 @@ const CreateArticlePage: React.FC = () => {
                 }
 
                 return { ...b, content: htmlContent };
-            })
-        );
-
-        // Обновляем editMode
-        setEditMode(prev => ({
-            ...prev,
-            [id]: {
-                ...prev[id],
-                rawText: b.type === "list" ? value : (isMarkdown ? "" : value),
-                markdown: isMarkdown ? value : (b.type === "text" ? prev[id]?.markdown || "" : "")
+            });
+            
+            // Обновляем editMode после обновления блоков
+            if (blockType) {
+                setEditMode(prev => ({
+                    ...prev,
+                    [id]: {
+                        ...prev[id],
+                        rawText: blockType === "list" ? value : (isMarkdown ? "" : value),
+                        markdown: isMarkdown ? value : (blockType === "text" ? prev[id]?.markdown || "" : "")
+                    }
+                }));
             }
-        }));
+            
+            return updated;
+        });
     };
 
     const removeBlock = (id: string) => {
@@ -275,6 +313,98 @@ const CreateArticlePage: React.FC = () => {
         updateBlock(id, newItems);
     };
 
+    // Функция для объединения всех блоков в HTML контент
+    const combineBlocksToHtml = (): string => {
+        return blocks.map(block => {
+            switch (block.type) {
+                case "title":
+                case "h2":
+                case "h3":
+                case "text":
+                case "infoRed":
+                case "infoBlue":
+                    return block.content;
+                case "list":
+                    return block.content;
+                case "media":
+                    if (typeof block.content === "string" && block.content.startsWith("data:")) {
+                        return block.content.startsWith("data:image") 
+                            ? `<img src="${block.content}" alt="media" class="rounded-md max-w-full" />`
+                            : block.content.startsWith("data:video")
+                            ? `<video src="${block.content}" controls class="rounded-md max-w-full"></video>`
+                            : "";
+                    }
+                    return "";
+                case "textMedia":
+                    const textMedia = block.content || { text: "", media: "" };
+                    let result = textMedia.text || "";
+                    if (textMedia.media && typeof textMedia.media === "string" && textMedia.media.startsWith("data:")) {
+                        if (textMedia.media.startsWith("data:image")) {
+                            result += `<img src="${textMedia.media}" alt="media" class="rounded-md max-w-full" />`;
+                        } else if (textMedia.media.startsWith("data:video")) {
+                            result += `<video src="${textMedia.media}" controls class="rounded-md max-w-full"></video>`;
+                        }
+                    }
+                    return result;
+                case "button":
+                    const button = block.content || { text: "", url: "" };
+                    return `<a href="${button.url || "#"}" target="_blank" rel="noreferrer"><button class="btn btn-primary">${button.text || "Кнопка"}</button></a>`;
+                default:
+                    return "";
+            }
+        }).join("");
+    };
+
+    // Функция сохранения статьи
+    const handleSave = async () => {
+        if (!articleTitle.trim()) {
+            alert("Пожалуйста, укажите заголовок статьи");
+            return;
+        }
+
+        if (blocks.length === 0) {
+            alert("Пожалуйста, добавьте хотя бы один блок");
+            return;
+        }
+
+        try {
+            setSaving(true);
+            const htmlContent = combineBlocksToHtml();
+            const tagsArray = articleTags
+                ? articleTags.split(";").map((t) => t.trim()).filter(Boolean)
+                : [];
+
+            await documentService.createDocument({
+                id: crypto.randomUUID(),
+                title: articleTitle,
+                content: htmlContent,
+                tags: [...tagsArray, "article"],
+                metadata: { type: "article", blocks: blocks },
+                author: "",
+                deleted: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            });
+
+            // Очищаем localStorage после успешного сохранения
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(STORAGE_KEY_TITLE);
+            localStorage.removeItem(STORAGE_KEY_TAGS);
+            setBlocks([]);
+            setEditMode({});
+            setArticleTitle("");
+            setArticleTags("");
+
+            alert("Статья успешно сохранена!");
+            navigate("/articles");
+        } catch (error) {
+            console.error("Error saving article:", error);
+            alert("Ошибка при сохранении статьи");
+        } finally {
+            setSaving(false);
+        }
+    };
+
     // Получение редактируемого значения для блока
     const getEditableValue = (block: Block) => {
         const editData = editMode[block.id];
@@ -312,11 +442,31 @@ const CreateArticlePage: React.FC = () => {
         <div className="p-6 w-4xl mx-auto">
             <div className="bg-white rounded-2xl p-8 shadow-sm border">
                 {/* HEADER */}
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="w-12 h-12 bg-gray-200 rounded-xl" />
+                <div className="mb-8">
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Заголовок статьи *
+                        </label>
+                        <input
+                            type="text"
+                            className="input input-bordered w-full text-2xl font-bold"
+                            placeholder="Введите заголовок статьи"
+                            value={articleTitle}
+                            onChange={(e) => setArticleTitle(e.target.value)}
+                            required
+                        />
+                    </div>
                     <div>
-                        <div className="font-bold">Иванов Антон</div>
-                        <div className="text-sm text-gray-500">Котики и щенки</div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Теги (разделите точкой с запятой)
+                        </label>
+                        <input
+                            type="text"
+                            className="input input-bordered w-full"
+                            placeholder="Бетон; Монолит; Стройка"
+                            value={articleTags}
+                            onChange={(e) => setArticleTags(e.target.value)}
+                        />
                     </div>
                 </div>
 
@@ -576,7 +726,11 @@ const CreateArticlePage: React.FC = () => {
                                 if (confirm("Очистить черновик?")) {
                                     setBlocks([]);
                                     setEditMode({});
+                                    setArticleTitle("");
+                                    setArticleTags("");
                                     localStorage.removeItem(STORAGE_KEY);
+                                    localStorage.removeItem(STORAGE_KEY_TITLE);
+                                    localStorage.removeItem(STORAGE_KEY_TAGS);
                                 }
                             }}
                         >
@@ -584,11 +738,10 @@ const CreateArticlePage: React.FC = () => {
                         </button>
                         <button
                             className="btn btn-primary"
-                            onClick={() => {
-                                alert("Сохранено в HTML формате! Картинки как base64, текст как HTML.");
-                            }}
+                            onClick={handleSave}
+                            disabled={saving || !articleTitle.trim() || blocks.length === 0}
                         >
-                            Сохранить
+                            {saving ? "Сохранение..." : "Сохранить"}
                         </button>
                     </div>
                 </div>

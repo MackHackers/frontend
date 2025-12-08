@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { documentService } from "../../../api/documentService";
-import type { DocumentOut } from "../../../api/documentService";
+import { newsService } from "../../../api/newsService";
+import type { DocumentOut } from "../../../api/newsService";
 
 export default function NewsManagement() {
   const [news, setNews] = useState<DocumentOut[]>([]);
@@ -20,22 +20,20 @@ export default function NewsManagement() {
   const [photo, setPhoto] = useState<{ file: File | null; preview: string | null }>({ file: null, preview: null });
   const [textContent, setTextContent] = useState<string>("");
 
-  const categories = [
-    "Все темы",
-    "Познание и преисполнение",
-    "Сущности в виде гномика",
-    "Любовь, смерть и роботы",
-    "Стройка",
-    "Котики и щенки",
-    "Хлеб всему голова",
-  ];
+  // Динамически получаем категории из тегов новостей
+  const getCategories = () => {
+    const allTags = new Set<string>();
+    news.forEach((item) => {
+      item.tags?.forEach((tag) => {
+        if (tag !== "news") {
+          allTags.add(tag);
+        }
+      });
+    });
+    return ["Все темы", ...Array.from(allTags)];
+  };
 
-  const mockUsers = [
-    "Белоконь Анастасия Владимировна",
-    "Сенкевич Анастасия Александровна",
-    "Иванов Иван Иванович",
-    "Сидоров Александр Викторович",
-  ];
+  const categories = getCategories();
 
   useEffect(() => {
     loadNews();
@@ -44,10 +42,8 @@ export default function NewsManagement() {
   const loadNews = async () => {
     try {
       setLoading(true);
-      const docs = await documentService.getAllDocuments();
-      setNews(docs.filter((doc) => 
-        !doc.deleted && (doc.tags?.includes("news") || doc.metadata?.type === "news")
-      ));
+      const docs = await newsService.getAllDocuments();
+      setNews(docs);
     } catch (error) {
       console.error("Error loading news:", error);
     } finally {
@@ -62,9 +58,9 @@ export default function NewsManagement() {
         title: item.title,
         content: item.content,
         tags: item.tags || [],
-        dateRange: "06.12.2025-31.12.2025",
-        company: 'ООО "Вторая тестовая очень длинное название компании которое не вмешается в одну строку"',
-        users: mockUsers,
+        dateRange: "",
+        company: "",
+        users: [],
       });
       setTextContent(item.content || "");
       setPhoto({ file: null, preview: null });
@@ -103,14 +99,14 @@ export default function NewsManagement() {
     e.preventDefault();
     try {
       if (editingNews) {
-        await documentService.updateDocument({
+        await newsService.updateDocument({
           ...editingNews,
           title: formData.title,
           content: textContent,
           tags: formData.tags,
         });
       } else {
-        await documentService.createDocument({
+        await newsService.createDocument({
           id: crypto.randomUUID(),
           title: formData.title,
           content: textContent,
@@ -146,7 +142,7 @@ export default function NewsManagement() {
     e.stopPropagation();
     if (confirm("Вы уверены, что хотите удалить эту новость?")) {
       try {
-        await documentService.deleteDocument(id);
+        await newsService.deleteDocument(id);
         loadNews();
       } catch (error) {
         console.error("Error deleting news:", error);
@@ -173,11 +169,7 @@ export default function NewsManagement() {
           <div className="flex-1">
             <h2 className="text-3xl font-medium mb-2">Новости</h2>
             <div className="flex items-center gap-2 text-sm text-[#90A5BB]">
-              <span>06.12.2025-31.12.2025</span>
-              <span>•</span>
-              <span className="max-w-md truncate">
-                ООО "Вторая тестовая очень длинное название компании которое не вмешается в одну строку"
-              </span>
+              {/* Информация о периоде и компании может быть добавлена позже */}
             </div>
           </div>
           <button
@@ -189,19 +181,7 @@ export default function NewsManagement() {
             </svg>
           </button>
         </div>
-        <div className="flex flex-wrap gap-3">
-          {mockUsers.map((user, idx) => (
-            <div
-              key={idx}
-              className="flex items-center gap-2 px-2 py-1 bg-[#FBFBFB] border border-[#DDDDDD] rounded text-sm text-[#7E7E7E]"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 7C8.933 7 10.5 5.433 10.5 3.5C10.5 1.567 8.933 0 7 0C5.067 0 3.5 1.567 3.5 3.5C3.5 5.433 5.067 7 7 7ZM7 8.75C4.58275 8.75 0 9.92275 0 12.25V14H14V12.25C14 9.92275 9.41725 8.75 7 8.75Z" fill="#A9A9A9"/>
-              </svg>
-              <span>{user}</span>
-            </div>
-          ))}
-        </div>
+        {/* Список пользователей может быть добавлен позже */}
       </div>
 
       {/* Двухколоночный макет */}

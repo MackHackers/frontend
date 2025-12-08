@@ -48,17 +48,14 @@ export interface SearchResponse {
     total: number;
 }
 
-export const documentService = {
+export const newsService = {
     async createDocument(data: CreateDocumentData): Promise<DocumentBase> {
-        console.log(data)
-        const response = await api.post<DocumentBase>('/documents/create', data);
+        const response = await api.post<DocumentBase>('/news/create', data);
         return response.data;
     },
 
     async searchDocuments(params: SearchParams): Promise<SearchResponse> {
         const response = await api.get<SearchResponse>('/news/search', { params });
-        console.log("search resp:")
-        console.log(response.data.results)
         return response.data;
     },
 
@@ -80,13 +77,14 @@ export const documentService = {
 
     async getAllDocuments(): Promise<DocumentOut[]> {
         const response = await api.get<string[]>('/news/all');
-        console.log(response.data)
-        let docs: any[] = []
-        for(let i = 0; i < response.data.length; i++){
-            const newDoc = await this.getDocument(response.data[i]);
-            docs = [...docs, newDoc]
+        if (!response.data || response.data.length === 0) {
+            return [];
         }
-        console.log(docs)
-        return docs;
+        // Используем Promise.all для параллельной загрузки документов
+        const docs = await Promise.all(
+            response.data.map((docId: string) => this.getDocument(docId))
+        );
+        // Фильтруем удаленные документы
+        return docs.filter((doc) => !doc.deleted);
     }
 };

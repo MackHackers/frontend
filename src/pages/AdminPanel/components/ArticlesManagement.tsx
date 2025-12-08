@@ -25,6 +25,7 @@ export default function ArticlesManagement() {
     try {
       setLoading(true);
       const docs = await documentService.getAllDocuments();
+      // Фильтруем только статьи
       setArticles(
         docs.filter(
           (doc) => !doc.deleted && (doc.tags?.includes("article") || doc.metadata?.type === "article")
