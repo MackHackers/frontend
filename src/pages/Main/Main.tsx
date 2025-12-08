@@ -12,17 +12,12 @@ export default function News() {
             разбитые по разделам и категориям для вашего удобства
           </p>
 
-          <div className="join w-full flex justify-center">
-            <select className="join-item select select-bordered  w-[20%]">
-              <option>Все разделы</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Поиск в базе знаний"
-              className="input input-bordered join-item"
-            />
-            <button className="btn btn-primary join-item">🔍</button>
-          </div>
+          <Link
+            to="/articles"
+            className="btn btn-300 w-[60%] h-20 text-lg flex items-center justify-center shadow-lg"
+          >
+            Поиск →
+          </Link>
         </div>
       </section>
 
@@ -43,71 +38,11 @@ export default function News() {
             Обучение →
           </Link>
           <Link
-            to="/docs"
+            to="/news"
             className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg"
           >
-            Документы →
+            Новости →
           </Link>
-        </div>
-      </section>
-
-      {/* NEWS SECTION */}
-      <section className="px-10 py-10">
-        <h2 className="text-2xl font-semibold mb-4">Новости</h2>
-
-        <div className="grid grid-cols-2 gap-6">
-          {/* BIG CARD */}
-          <div className="card bg-base-100 shadow-md">
-            <figure>
-              <img src="https://placehold.co/700x400" />
-            </figure>
-            <div className="card-body">
-              <p className="text-xs text-gray-400">08.04.2025</p>
-              <h3 className="font-semibold">Страшно, очень страшно!</h3>
-              <span className="text-primary cursor-pointer">
-                Читать новость
-              </span>
-            </div>
-          </div>
-
-          {/* RIGHT SIDE NEWS LIST */}
-          <div className="grid gap-6">
-            <div className="card card-side bg-base-100 shadow-md">
-              <figure>
-                <img src="https://placehold.co/300x200" />
-              </figure>
-              <div className="card-body">
-                <p className="text-xs text-gray-400">21.03.2025</p>
-                <h3 className="font-semibold">
-                  ЖК «Феникс» — квартиры не продаём
-                </h3>
-                <span className="text-primary cursor-pointer">
-                  Читать новость
-                </span>
-              </div>
-            </div>
-
-            <div className="card card-side bg-base-100 shadow-md">
-              <figure>
-                <img src="https://placehold.co/300x200" />
-              </figure>
-              <div className="card-body">
-                <p className="text-xs text-gray-400">26.02.2025</p>
-                <h3 className="font-semibold">
-                  Ибрагим вам о чём-нибудь говорит?
-                </h3>
-                <span className="text-primary cursor-pointer">
-                  Читать новость
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center">
-              <Link className="btn btn-primary w-full h-20 text-lg" to="/news">
-                Перейти в раздел новостей →
-              </Link>
-            </div>
-          </div>
         </div>
       </section>
 
