@@ -199,7 +199,8 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
             onClick={(e) => e.stopPropagation()}
           >
             <ArticleView
-              htmlContent={selectedArticle.content}
+              blocks={selectedArticle.metadata?.blocks}
+              htmlContent={selectedArticle.metadata?.blocks ? undefined : selectedArticle.content}
               title={selectedArticle.title}
               author={selectedArticle.author}
               subtitle={formatDate(selectedArticle.created_at)}

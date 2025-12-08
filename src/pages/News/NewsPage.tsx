@@ -272,7 +272,8 @@ export default function NewsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <ArticleView
-              htmlContent={selectedNews.content}
+              blocks={selectedNews.metadata?.blocks}
+              htmlContent={selectedNews.metadata?.blocks ? undefined : selectedNews.content}
               title={selectedNews.title}
               author={selectedNews.author}
               subtitle={formatDate(selectedNews.created_at)}
