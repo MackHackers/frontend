@@ -14,7 +14,7 @@ export default function News() {
 
           <Link
             to="/articles"
-            className="btn btn-300 w-[60%] h-20 text-lg flex items-center justify-center shadow-lg"
+            className="btn btn-primary w-[60%] h-20 text-lg flex items-center justify-center shadow-lg"
           >
             Поиск →
           </Link>
@@ -27,19 +27,19 @@ export default function News() {
         <div className="grid grid-cols-3 gap-4">
           <Link
             to="/articles"
-            className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg"
+            className="btn btn-primary w-full h-20 text-lg flex items-center justify-center shadow-lg"
           >
             Статьи →
           </Link>
           <Link
             to="/learning"
-            className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg"
+            className="btn btn-primary w-full h-20 text-lg flex items-center justify-center shadow-lg"
           >
             Обучение →
           </Link>
           <Link
             to="/news"
-            className="btn btn-300 w-full h-20 text-lg flex items-center justify-center shadow-lg"
+            className="btn btn-primary w-full h-20 text-lg flex items-center justify-center shadow-lg"
           >
             Новости →
           </Link>
