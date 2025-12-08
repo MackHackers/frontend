@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { documentService } from "../../api/documentService";
 import type { SearchResponse, DocumentOut } from "../../api/documentService";
-import { useNavigate } from "react-router-dom";
+import ArticleView from "../Articles/ArticleWiew";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DocumentOut[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  const navigate = useNavigate();
+  const [selectedDocument, setSelectedDocument] = useState<DocumentOut | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +32,22 @@ export default function SearchPage() {
     }
   };
 
-  const handleResultClick = (docId: string) => {
-    navigate(`/docs?doc_id=${docId}`);
+  const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "Дата не указана";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("ru-RU", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return "Неверная дата";
+    }
+  };
+
+  const handleResultClick = (document: DocumentOut) => {
+    setSelectedDocument(document);
   };
 
   return (
@@ -86,13 +100,13 @@ export default function SearchPage() {
         {results.map((result, index) => (
           <div
             key={result.id || index}
-            className="bg-base-100 p-5 rounded-xl shadow-sm cursor-pointer hover:shadow transition"
-            onClick={() => result.id && handleResultClick(result.id)}
+            className="bg-base-100 p-5 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
+            onClick={() => handleResultClick(result)}
           >
             <div className="text-sm text-gray-500 flex items-center gap-2 mb-1">
               {result.created_at && (
                 <>
-                  📅 {new Date(result.created_at).toLocaleDateString("ru-RU")}
+                  📅 {formatDate(result.created_at)}
                   {result.author && ` | Автор: ${result.author}`}
                 </>
               )}
@@ -113,6 +127,29 @@ export default function SearchPage() {
           </div>
         ))}
       </div>
+
+      {/* MODAL PREVIEW */}
+      {selectedDocument && (
+        <dialog className="modal modal-open" onClick={() => setSelectedDocument(null)}>
+          <div
+            className="modal-box max-w-4xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ArticleView
+              blocks={selectedDocument.metadata?.blocks}
+              htmlContent={selectedDocument.metadata?.blocks ? undefined : selectedDocument.content}
+              title={selectedDocument.title}
+              author={selectedDocument.author}
+              subtitle={formatDate(selectedDocument.created_at)}
+            />
+            <div className="modal-action">
+              <button className="btn" onClick={() => setSelectedDocument(null)}>
+                Закрыть
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 }

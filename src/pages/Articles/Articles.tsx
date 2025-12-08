@@ -58,7 +58,8 @@ export default function ArticlesPage() {
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.tags?.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
+        tag.toLowerCase().includes(searchQuery.toLowerCase())`
+      `
       );
 
     return categoryMatch && searchMatch;
