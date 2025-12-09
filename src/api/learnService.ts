@@ -48,38 +48,35 @@ export interface SearchResponse {
     total: number;
 }
 
-export const documentService = {
+export const learnService = {
     async createDocument(data: CreateDocumentData): Promise<DocumentBase> {
-        console.log(data)
-        const response = await api.post<DocumentBase>('/documents/create', data);
+        const response = await api.post<DocumentBase>('/learn/create', data);
         return response.data;
     },
 
     async searchDocuments(params: SearchParams): Promise<SearchResponse> {
-        const response = await api.get<SearchResponse>('/documents/search', { params });
-        console.log("search resp:")
-        console.log(response.data.results)
+        const response = await api.get<SearchResponse>('/learn/search', { params });
         return response.data;
     },
 
     async getDocument(docId: string): Promise<DocumentOut> {
-        const response = await api.get<DocumentOut>('/documents/', {
+        const response = await api.get<DocumentOut>('/learn/', {
             params: { doc_id: docId }
         });
         return response.data;
     },
 
     async updateDocument(data: DocumentBase): Promise<DocumentBase> {
-        const response = await api.put<DocumentBase>(`/documents/update`, data);
+        const response = await api.put<DocumentBase>(`/learn/update`, data);
         return response.data;
     },
 
     async deleteDocument(docId: string): Promise<void> {
-        await api.delete(`/documents`, {params: {doc_id: docId}});
+        await api.delete(`/learn`, {params: {doc_id: docId}});
     },
 
     async getAllDocuments(): Promise<DocumentOut[]> {
-        const response = await api.get<string[]>('/documents/all');
+        const response = await api.get<string[]>('/learn/all');
         if (!response.data || response.data.length === 0) {
             return [];
         }
@@ -87,6 +84,7 @@ export const documentService = {
         const docs = await Promise.all(
             response.data.map((docId: string) => this.getDocument(docId))
         );
-        return docs;
+        // Фильтруем удаленные документы
+        return docs.filter((doc) => !doc.deleted);
     }
 };

@@ -1,92 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userService } from '../../api/userService';
+import { userService } from "../../api/userService";
 import logo from "../../icons/logo+module.svg";
+import { Link } from "react-router";
 
 const DocsHeader: React.FC = () => {
-    const navigate = useNavigate();
-    const [userRole, setUserRole] = useState<string>('viewer');
-    const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<string>("viewer");
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const loadUserRole = async () => {
-            try {
-                const role = await userService.getUserRole();
-                setUserRole(role);
-            } catch (error) {
-                console.error('Error loading user role:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadUserRole();
-    }, []);
-
-    const handleDocsClick = () => {
-        navigate('/docs');
+  useEffect(() => {
+    const loadUserRole = async () => {
+      try {
+        const role = await userService.getUserRole();
+        setUserRole(role);
+      } catch (error) {
+        console.error("Error loading user role:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleDocsManagementClick = () => {
-        navigate('/docs-management');
-    };
+    loadUserRole();
+  }, []);
 
-    const handleUserManagementClick = () => {
-        navigate('/user-management');
-    };
+  const isManagerOrRoot = ["manager", "root"].includes(userRole);
+  // const isRoot = userRole === "root";
 
-    const isManagerOrRoot = ['manager', 'root'].includes(userRole);
-    const isRoot = userRole === 'root';
-
-    if (loading) {
-        return (
-            <header className="header">
-                <div className="header-container">
-                    <div className="header-left">
-                        <img className="logo" src={logo} alt="Логотип"/>
-                        <div className="loading-text">Загрузка...</div>
-                    </div>
-                </div>
-            </header>
-        );
-    }
-
+  if (loading) {
     return (
-        <header className="header">
-            <div className="header-container">
-                <div className="header-left">
-                    <img
-                        className="logo"
-                        src={logo}
-                        onClick={handleDocsClick}
-                        alt="Логотип"
-                    />
-                    <nav className="header-nav">
-                        <button className="nav-button">Новости</button>
-                        <button className="nav-button">Обучение</button>
-                        <button className="nav-button">Статьи</button>
-                        <button className="nav-button">Документы</button>
-                        <button className="nav-button">FAQ</button>
-                    </nav>
-                </div>
-
-                <div className="header-right">
-                    {isManagerOrRoot && (
-                        <button
-                            className="admin-button"
-                            onClick={handleDocsManagementClick}
-                        >
-                            Администрирование
-                        </button>
-                    )}
-
-                    <button className="user-name-button">
-                        Фамилия Имя
-                    </button>
-                </div>
-            </div>
-        </header>
+      <header className="header">
+        <div className="header-container">
+          <div className="header-left">
+            <img className="logo" src={logo} alt="Логотип" />
+            <div className="loading-text">Загрузка...</div>
+          </div>
+        </div>
+      </header>
     );
+  }
+
+  return (
+    <header className="navbar bg-base-200 rounded-xl shadow-md">
+      <div className="flex w-full justify-between">
+        <div className="flex items-center gap-8">
+          <img
+            className="btn btn-ghost"
+            src={logo}
+            onClick={() => navigate("/main")}
+            alt="Logo"
+          />
+          <Link className="btn btn-ghost" to="/news">
+            Новости
+          </Link>
+          <Link className="btn btn-ghost" to="/learning">
+            Обучение
+          </Link>
+          <Link className="btn btn-ghost" to="/articles">
+            Статьи
+          </Link>
+          <Link className="btn btn-ghost" to="/search">
+            Поиск
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {isManagerOrRoot && (
+            <Link className="btn btn-ghost" to="/adminPanel">
+              Администрирование
+            </Link>
+          )}
+
+          <Link className="btn btn-ghost" to="/account">
+            Фамилия Имя
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default DocsHeader;

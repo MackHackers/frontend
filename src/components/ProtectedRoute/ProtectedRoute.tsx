@@ -1,18 +1,11 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
-interface ProtectedRouteProps {
-  children: React.ReactElement;
-}
-
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+export default function ProtectedRoute () {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
   }
 
-  return children;
+  return <Outlet />;
 };
-
-export default ProtectedRoute;
