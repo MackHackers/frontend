@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { documentService } from "../../api/documentService";
 import type { DocumentOut } from "../../api/documentService";
 import ArticleView from "./ArticleWiew";
+import { formatDate, getArticlePreview } from "./utils/helpers";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<DocumentOut[]>([]);
@@ -47,55 +48,19 @@ export default function ArticlesPage() {
 
   // Фильтруем статьи по категории и поисковому запросу
   const filteredArticles = articles.filter((article) => {
-    // Фильтр по категории
     const categoryMatch =
-      selectedCategory === "Все темы" ||
-      article.tags?.includes(selectedCategory);
+      selectedCategory === "Все темы" || article.tags?.includes(selectedCategory);
 
-    // Фильтр по поисковому запросу
     const searchMatch =
       !searchQuery ||
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags?.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())`
-      `
-      );
+      article.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return categoryMatch && searchMatch;
   });
 
-  // Функция для получения превью текста статьи
-  const getArticlePreview = (content: string | undefined): string => {
-    if (!content) return "Нет содержимого";
-    // Удаляем HTML теги для превью
-    const text = content.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ");
-    // Берем первые 150 символов
-    return text.length > 150 ? text.substring(0, 150) + "..." : text;
-  };
-
-  // Форматирование даты
-  const formatDate = (dateString: string | undefined): string => {
-    if (!dateString) return "Дата не указана";
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("ru-RU", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-    } catch {
-      return "Дата не указана";
-    }
-  };
-
-  const handleSearch = () => {
-    // Поиск уже работает через фильтрацию в filteredArticles
-    // Можно добавить вызов API поиска здесь, если нужно
-  };
-
   const handleArticleClick = (article: DocumentOut) => {
-    // Открываем модальное окно для просмотра статьи
     setSelectedArticle(article);
   };
 
@@ -119,8 +84,7 @@ export default function ArticlesPage() {
             <li key={cat}>
               <button
                 onClick={() => setSelectedCategory(cat)}
-                className={`w-full text-left px-3 py-2 rounded-lg transition
-${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`}
+                className={`w-full text-left px-3 py-2 rounded-lg transition ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`}
               >
                 {cat}
               </button>
@@ -129,8 +93,6 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
         </ul>
       </aside>
       <div className="flex-1 flex flex-col gap-6">
-        
-
         {/* List of articles */}
         {filteredArticles.length === 0 ? (
           <div className="bg-white p-8 rounded-xl shadow-sm text-center text-gray-500">
@@ -161,10 +123,7 @@ ${selectedCategory === cat ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"}`
                   {article.tags
                     .filter((tag) => tag !== "article")
                     .map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
-                      >
+                      <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
                         {tag}
                       </span>
                     ))}
